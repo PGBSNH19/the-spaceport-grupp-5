@@ -11,25 +11,26 @@ using RestSharp.Serialization.Json;
 
 namespace TheSpaceport
 {
-    class Program
+    internal class Program
     {
-        
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            
+            var client = new RestClient("https://swapi.co/api/starships/");
+            var request = new RestRequest("?results=&page=1", Method.GET);
 
+            request.AddUrlSegment("post", 1);
+            //https://swapi.co/api/starships/?results=&page=4
 
+            var content = client.Execute(request).Content;
         }
     }
-
-    
 
     public class Person
     {
         public int PersonID { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
-    } 
+    }
 
     public class House
     {
