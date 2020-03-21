@@ -13,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace TheSpaceport
 {
-    internal class Program
+    public class Program
     {
         private static void Main(string[] args)
         {
@@ -28,13 +28,13 @@ namespace TheSpaceport
             //var personResponse = client.Execute(personRequest);
             //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
             var test = new CreateCustomer().PersonControl().StarshipControl();
-
         }
     }
 
     public interface IAccessControl
     {
         IAccessControl PersonControl();
+
         IAccessControl StarshipControl();
     }
 
@@ -43,14 +43,15 @@ namespace TheSpaceport
         public string name { get; set; }
         public string ship { get; set; }
 
-        RestClient client = new RestClient("https://swapi.co/api/");
+        private RestClient client = new RestClient("https://swapi.co/api/");
+
         public IAccessControl PersonControl()
         {
             Console.Write("Please enter your name: ");
             var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
             var personResponse = client.Execute(personRequest);
             var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
-            if(person.results.Count > 0)
+            if (person.results.Count > 0)
             {
                 Console.WriteLine($"Welcome {person.results[0].name}");
                 this.name = person.results[0].name;
@@ -61,13 +62,14 @@ namespace TheSpaceport
             }
             return this;
         }
+
         public IAccessControl StarshipControl()
         {
             Console.Write("Please validate your starship: ");
             var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
             var starshipResponse = client.Execute(starshipRequest);
             var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
-            if(starship.results.Count > 0)
+            if (starship.results.Count > 0)
             {
                 Console.WriteLine($"{starship.results[0].name} ready for parking");
                 this.ship = starship.results[0].name;
@@ -80,14 +82,11 @@ namespace TheSpaceport
         }
     }
 
-    
-
     public class Travler
     {
         public string Name { get; set; }
-
     }
-   
+
     public class Person
     {
         public int PersonID { get; set; }
@@ -95,17 +94,19 @@ namespace TheSpaceport
         public int Age { get; set; }
     }
 
-    public class House
+    public class Ship
     {
-        public int HouseID { get; set; }
-        public int Room { get; set; }
+        public int ShipID { get; set; }
+        public string ShipName { get; set; }
+        public int ShipLength { get; set; }
+
         public List<Person> Persons { get; set; }
     }
 
     public class MyContext : DbContext
     {
         public DbSet<Person> Persons { get; set; }
-        public DbSet<House> Houses { get; set; }
+        public DbSet<Ship> Ships { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
