@@ -17,91 +17,77 @@ namespace TheSpaceport
     {
         private static void Main(string[] args)
         {
-            string test = "luke";
-            RestClient client = new RestClient("https://swapi.co/api/");
-            
-            var starshipRequest = new RestRequest("starships/?search=death");
-            var starshipResponse = client.Execute(starshipRequest);
-            var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
+            //string test = "mamma";
+            //RestClient client = new RestClient("https://swapi.co/api/");
+
+            ////var starshipRequest = new RestRequest("starships/?search=death");
+            ////var starshipResponse = client.Execute(starshipRequest);
+            ////var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
 
             //var personRequest = new RestRequest($"people/?search={test}", DataFormat.Json);
             //var personResponse = client.Execute(personRequest);
             //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
+            var test = new CreateCustomer().PersonControl().StarshipControl();
 
         }
     }
 
-    public class API
+    public interface IAccessControl
     {
-        private static RestClient client = new RestClient("https://swapi.co/api/");
+        IAccessControl PersonControl();
+        IAccessControl StarshipControl();
+    }
 
-        public CharacterRoot GetCharacter()
+    public class CreateCustomer : IAccessControl
+    {
+        public string name { get; set; }
+        public string ship { get; set; }
+
+        RestClient client = new RestClient("https://swapi.co/api/");
+        public IAccessControl PersonControl()
         {
-            var request = new RestRequest("people/1/", DataFormat.Json);
-            var response = client.Get<CharacterRoot>(request);
-
-            return response.Data;
+            Console.Write("Please enter your name: ");
+            var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
+            var personResponse = client.Execute(personRequest);
+            var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
+            if(person.results.Count > 0)
+            {
+                Console.WriteLine($"Welcome {person.results[0].name}");
+                this.name = person.results[0].name;
+            }
+            else
+            {
+                Console.WriteLine("Access denied");
+            }
+            return this;
         }
-
-
+        public IAccessControl StarshipControl()
+        {
+            Console.Write("Please validate your starship: ");
+            var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
+            var starshipResponse = client.Execute(starshipRequest);
+            var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
+            if(starship.results.Count > 0)
+            {
+                Console.WriteLine($"{starship.results[0].name} ready for parking");
+                this.ship = starship.results[0].name;
+            }
+            else
+            {
+                Console.WriteLine("Unauthorised spaceship");
+            }
+            return this;
+        }
     }
-    public class Character
+
+    
+
+    public class Travler
     {
-        public string name { get; set; }
-        public string birth_year{get; set;}
-        public string eye_color { get; set; }
-        public string gender { get; set; }
-        public string hair_color { get; set; }
-        public string height { get; set; }
-        public string mass { get; set; }
-        public string skin_color { get; set; }
-        public string homeworld { get; set; }
-        public List<string> films { get; set; }
-        public List<string> species { get; set; }
-        public List<string> starships { get; set; }
-        public List<string> vehicles { get; set; }
-        public string url { get; set; }
-        public string created { get; set; }
-        public string edited { get; set; }
-    }
+        public string Name { get; set; }
 
-    public class CharacterRoot
-    {
-        public int count { get; set; }
-        public string next { get; set; }
-        public object previos { get; set; }
-        public List<Character> results { get; set; }
     }
-
-    public class Starship
-    {
-        public string name { get; set; }
-        public string model { get; set; }
-        public string starship_class { get; set; }
-        public string manufacturer { get; set; }
-        public string cost_in_credits { get; set; }
-        public string length { get; set; }
-        public string crew { get; set; }
-        public string passengers { get; set; }
-        public string max_atmosphering_speed { get; set; }
-        public string hyperdrive_rating { get; set; }
-        public string MGLT { get; set; }
-        public string cargo_capacity { get; set; }
-        public string consumables { get; set; }
-        public List<string> films { get; set; }
-        public List<string> pilots { get; set; }
-        public string url { get; set; }
-        public string created { get; set; }
-        public string edited { get; set; }
-    }
-
-    public class StarshipRoot
-    {
-        public int count { get; set; }
-        public string next { get; set; }
-        public object previos { get; set; }
-        public List<Starship> results { get; set; }
-    }
+   
     public class Person
     {
         public int PersonID { get; set; }
