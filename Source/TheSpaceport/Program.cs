@@ -47,37 +47,51 @@ namespace TheSpaceport
 
         public IAccessControl PersonControl()
         {
-            Console.Write("Please enter your name: ");
-            var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
-            var personResponse = client.Execute(personRequest);
-            var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
-            if (person.results.Count > 0)
+            bool a = true;
+            do
             {
-                Console.WriteLine($"Welcome {person.results[0].name}");
-                this.name = person.results[0].name;
-            }
-            else
-            {
-                Console.WriteLine("Access denied");
-            }
+                Console.Write("Please enter your name: ");
+                var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
+                var personResponse = client.Execute(personRequest);
+                var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
+                if (person.results.Count > 0)
+                {
+                    Console.WriteLine($"Welcome {person.results[0].name}");
+                    this.name = person.results[0].name;
+                    a = false;
+                }
+                else
+                {
+                    Console.WriteLine("Access denied");
+                }
+            } while (a);
+
             return this;
         }
 
         public IAccessControl StarshipControl()
         {
-            Console.Write("Please validate your starship: ");
-            var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
-            var starshipResponse = client.Execute(starshipRequest);
-            var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
-            if (starship.results.Count > 0)
+            bool a = true;
+            do
             {
-                Console.WriteLine($"{starship.results[0].name} ready for parking");
-                this.ship = starship.results[0].name;
+                Console.Write("Please validate your starship: ");
+                var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
+                var starshipResponse = client.Execute(starshipRequest);
+                var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
+
+                if (starship.results.Count > 0)
+                {
+                    Console.WriteLine($"{starship.results[0].name} ready for parking");
+                    this.ship = starship.results[0].name;
+                    a = false;
+                }
+                else
+                {
+                    Console.WriteLine("Unauthorised spaceship");
+                }
             }
-            else
-            {
-                Console.WriteLine("Unauthorised spaceship");
-            }
+
+            while (a);
             return this;
         }
     }
