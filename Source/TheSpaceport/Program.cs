@@ -19,15 +19,14 @@ namespace TheSpaceport
         {
             string test = "luke";
             RestClient client = new RestClient("https://swapi.co/api/");
-            //var personRequest = new RestRequest($"people/?search={test}", DataFormat.Json);
-            //var personResponse = client.Execute(personRequest);
-
+            
             var starshipRequest = new RestRequest("starships/?search=death");
             var starshipResponse = client.Execute(starshipRequest);
-
-
-            //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
             var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
+
+            //var personRequest = new RestRequest($"people/?search={test}", DataFormat.Json);
+            //var personResponse = client.Execute(personRequest);
+            //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
 
         }
     }
