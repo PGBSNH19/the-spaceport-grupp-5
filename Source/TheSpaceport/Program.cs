@@ -27,7 +27,7 @@ namespace TheSpaceport
             //var personRequest = new RestRequest($"people/?search={test}", DataFormat.Json);
             //var personResponse = client.Execute(personRequest);
             //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
-            var test = new CreateCustomer().PersonControl().StarshipControl();
+            var test = new CreateCustomer().PersonControl().StarshipControl().Charge();
         }
     }
 
@@ -36,6 +36,8 @@ namespace TheSpaceport
         IAccessControl PersonControl();
 
         IAccessControl StarshipControl();
+
+        IAccessControl Charge();
     }
 
     public class CreateCustomer : IAccessControl
@@ -65,7 +67,6 @@ namespace TheSpaceport
                     Console.WriteLine("Access denied");
                 }
             } while (a);
-
             return this;
         }
 
@@ -92,6 +93,28 @@ namespace TheSpaceport
             }
 
             while (a);
+            return this;
+        }
+
+        public IAccessControl Charge()
+        {
+            bool a = true;
+            int antalDagar = 0;
+            do
+            {
+                Console.WriteLine("To park it cost 500 kr day.\nEnter how many days you want to park? ");
+                antalDagar = int.Parse(Console.ReadLine());
+
+                if (antalDagar > 0)
+                {
+                    Console.WriteLine($"You will park {antalDagar} days");
+                    a = false;
+                }
+                else
+                {
+                    Console.WriteLine($"You input was {antalDagar} and it´s not invalid input");
+                }
+            } while (a);
             return this;
         }
     }
