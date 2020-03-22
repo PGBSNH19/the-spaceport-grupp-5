@@ -26,9 +26,13 @@ namespace TheSpaceport
     public interface IAccessControl
     {
         IAccessControl PersonControl();
+
         IAccessControl AddFunds();
+
         IAccessControl StarshipControl();
+
         IAccessControl Charge();
+
         IAccessControl AddToDataBase();
     }
 
@@ -41,7 +45,7 @@ namespace TheSpaceport
 
         public IAccessControl PersonControl()
         {
-            bool a = true;
+            bool loop = true;
             do
             {
                 Console.Write("Please enter your name: ");
@@ -52,13 +56,13 @@ namespace TheSpaceport
                 {
                     Console.WriteLine($"Welcome {person.results[0].name}");
                     this.addPerson.Name = person.results[0].name;
-                    a = false;
+                    loop = false;
                 }
                 else
                 {
                     Console.WriteLine("Access denied");
                 }
-            } while (a);
+            } while (loop);
             return this;
         }
 
@@ -66,13 +70,13 @@ namespace TheSpaceport
         {
             Console.Write("Please add credits to your card (Minimum 1000 credits): ");
             bool loop = false;
-            while(loop == false)
+            while (loop == false)
             {
                 try
                 {
                     addPerson.Credits = int.Parse(Console.ReadLine());
-                    if(addPerson.Credits >= 1000)
-                    loop = true;
+                    if (addPerson.Credits >= 1000)
+                        loop = true;
                 }
                 catch
                 {
@@ -84,7 +88,7 @@ namespace TheSpaceport
 
         public IAccessControl StarshipControl()
         {
-            bool a = true;
+            bool loop = true;
             do
             {
                 Console.Write("Please validate your starship: ");
@@ -94,20 +98,16 @@ namespace TheSpaceport
 
                 if (starship.results.Count > 0)
                 {
-                    
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
                     this.addStarship.ShipName = starship.results[0].name;
                     this.addStarship.PricePerDay = 1000;
-                    a = false;
+                    loop = false;
                 }
                 else
                 {
                     Console.WriteLine("Unauthorised spaceship");
                 }
-            }
-
-            while (a);
-            
+            } while (loop);
             return this;
         }
 
@@ -116,7 +116,7 @@ namespace TheSpaceport
             bool loop = false;
             Console.WriteLine($"The parkingcost for {this.addStarship.ShipName} will be {this.addStarship.PricePerDay} per day " +
                 $".\nEnter how many days you want to park (Minimum 1 day): ");
-            while(loop == false)
+            while (loop == false)
             {
                 try
                 {
@@ -133,7 +133,6 @@ namespace TheSpaceport
 
         public IAccessControl AddToDataBase()
         {
-            
             MyContext myContext = new MyContext();
             myContext.Add<DatabasePerson>(this.addPerson);
             this.addStarship.PersonID = int.Parse(myContext.Entry(this.addPerson).Property("PersonID").CurrentValue.ToString());
@@ -152,8 +151,10 @@ namespace TheSpaceport
     {
         [Key]
         public int PersonID { get; set; }
+
         public string Name { get; set; }
         public int Credits { get; set; }
+
         [ForeignKey("PersonID")]
         public List<DatabaseStarship> Startships { get; set; }
     }
@@ -161,23 +162,18 @@ namespace TheSpaceport
     public class DatabaseStarship
     {
         [Key]
-        public int ShipID { get; set; } 
+        public int ShipID { get; set; }
+
         public int PersonID { get; set; }
         public string ShipName { get; set; }
         public int PricePerDay { get; set; }
         public int NumberOfDays { get; set; }
-        
-        
     }
-
-    
 
     public class MyContext : DbContext
     {
         public DbSet<DatabasePerson> Persons { get; set; }
         public DbSet<DatabaseStarship> Spaceships { get; set; }
-       
-
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
