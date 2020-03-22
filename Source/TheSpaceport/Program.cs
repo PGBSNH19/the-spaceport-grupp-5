@@ -19,7 +19,7 @@ namespace TheSpaceport
     {
         private static void Main(string[] args)
         {
-            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDataBase();
+            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDatabase();
         }
     }
 
@@ -29,13 +29,13 @@ namespace TheSpaceport
         IAccessControl AddFunds();
         IAccessControl StarshipControl();
         IAccessControl Charge();
-        IAccessControl AddToDataBase();
+        IAccessControl AddToDatabase();
     }
 
     public class CreateCustomer : IAccessControl
     {
-        public DataBasePerson addPerson = new DataBasePerson();
-        public DataBaseStartship addStarship = new DataBaseStartship();
+        public DatabasePerson addPerson = new DatabasePerson();
+        public DatabaseStarship addStarship = new DatabaseStarship();
 
         private RestClient client = new RestClient("https://swapi.co/api/");
 
@@ -131,13 +131,13 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAccessControl AddToDataBase()
+        public IAccessControl AddToDatabase()
         {
             
             MyContext myContext = new MyContext();
-            myContext.Add<DataBasePerson>(this.addPerson);
+            myContext.Add<DatabasePerson>(this.addPerson);
             this.addStarship.PersonID = int.Parse(myContext.Entry(this.addPerson).Property("PersonID").CurrentValue.ToString());
-            myContext.Add<DataBaseStartship>(this.addStarship);
+            myContext.Add<DatabaseStarship>(this.addStarship);
             myContext.SaveChanges();
             return this;
         }
@@ -148,17 +148,17 @@ namespace TheSpaceport
         public string Name { get; set; }
     }
 
-    public class DataBasePerson
+    public class DatabasePerson
     {
         [Key]
         public int PersonID { get; set; }
         public string Name { get; set; }
         public int Credits { get; set; }
         [ForeignKey("PersonID")]
-        public List<DataBaseStartship> Startships { get; set; }
+        public List<DatabaseStarship> Startships { get; set; }
     }
 
-    public class DataBaseStartship
+    public class DatabaseStarship
     {
         [Key]
         public int ShipID { get; set; } 
@@ -174,8 +174,8 @@ namespace TheSpaceport
 
     public class MyContext : DbContext
     {
-        public DbSet<DataBasePerson> Persons { get; set; }
-        public DbSet<DataBaseStartship> Spaceships { get; set; }
+        public DbSet<DatabasePerson> Persons { get; set; }
+        public DbSet<DatabaseStarship> Spaceships { get; set; }
        
 
 
