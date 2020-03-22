@@ -100,19 +100,24 @@ namespace TheSpaceport
         {
             bool a = true;
             int antalDagar = 0;
+            int b = 0;
+            string s;
             do
             {
                 Console.WriteLine("To park it cost 500 kr day.\nEnter how many days you want to park? ");
-                antalDagar = int.Parse(Console.ReadLine());
-
-                if (antalDagar > 0)
+                s = Console.ReadLine();
+                if (int.TryParse(s, out b))
                 {
-                    Console.WriteLine($"You will park {antalDagar} days");
-                    a = false;
-                }
-                else
-                {
-                    Console.WriteLine($"You input was {antalDagar} and it´s not invalid input");
+                    antalDagar = int.Parse(s);
+                    if (antalDagar > 0)
+                    {
+                        Console.WriteLine($"You will park {antalDagar} days");
+                        a = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"You input was {antalDagar} and it´s not invalid input");
+                    }
                 }
             } while (a);
             return this;
