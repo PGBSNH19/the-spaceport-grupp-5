@@ -10,8 +10,8 @@ using TheSpaceport;
 namespace TheSpaceport.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20200322111633_updatetest2")]
-    partial class updatetest2
+    [Migration("20200322143205_update")]
+    partial class update
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace TheSpaceport.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
                     b.Property<int>("PersonID")
                         .ValueGeneratedOnAdd()
@@ -31,15 +31,20 @@ namespace TheSpaceport.Migrations
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DataBaseStarthipShipID")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PersonID");
 
+                    b.HasIndex("DataBaseStarthipShipID");
+
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBaseStarthip", b =>
                 {
                     b.Property<int>("ShipID")
                         .ValueGeneratedOnAdd()
@@ -49,7 +54,7 @@ namespace TheSpaceport.Migrations
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonID")
+                    b.Property<int>("PersonID")
                         .HasColumnType("int");
 
                     b.Property<int>("PricePerDay")
@@ -60,16 +65,14 @@ namespace TheSpaceport.Migrations
 
                     b.HasKey("ShipID");
 
-                    b.HasIndex("PersonID");
-
                     b.ToTable("Spaceships");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
-                    b.HasOne("TheSpaceport.Person", null)
-                        .WithMany("ShipID")
-                        .HasForeignKey("PersonID");
+                    b.HasOne("TheSpaceport.DataBaseStarthip", null)
+                        .WithMany("Person")
+                        .HasForeignKey("DataBaseStarthipShipID");
                 });
 #pragma warning restore 612, 618
         }

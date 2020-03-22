@@ -10,8 +10,8 @@ using TheSpaceport;
 namespace TheSpaceport.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20200321223234_ChangeTable")]
-    partial class ChangeTable
+    [Migration("20200322142902_Inital")]
+    partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,37 +21,40 @@ namespace TheSpaceport.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
                     b.Property<int>("PersonID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Age")
+                    b.Property<int>("Credits")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("DataBaseStarthipShipID")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ShipID")
-                        .HasColumnType("int");
-
                     b.HasKey("PersonID");
 
-                    b.HasIndex("ShipID");
+                    b.HasIndex("DataBaseStarthipShipID");
 
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Ship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBaseStarthip", b =>
                 {
                     b.Property<int>("ShipID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ShipLength")
+                    b.Property<int>("NumberOfDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PricePerDay")
                         .HasColumnType("int");
 
                     b.Property<string>("ShipName")
@@ -59,14 +62,14 @@ namespace TheSpaceport.Migrations
 
                     b.HasKey("ShipID");
 
-                    b.ToTable("Ships");
+                    b.ToTable("Spaceships");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
-                    b.HasOne("TheSpaceport.Ship", null)
-                        .WithMany("Persons")
-                        .HasForeignKey("ShipID");
+                    b.HasOne("TheSpaceport.DataBaseStarthip", null)
+                        .WithMany("Person")
+                        .HasForeignKey("DataBaseStarthipShipID");
                 });
 #pragma warning restore 612, 618
         }

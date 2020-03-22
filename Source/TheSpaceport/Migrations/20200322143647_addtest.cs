@@ -2,70 +2,70 @@
 
 namespace TheSpaceport.Migrations
 {
-    public partial class updatetest2 : Migration
+    public partial class addtest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Persons_Spaceships_SpaceshipShipID",
+                name: "FK_Persons_Spaceships_DataBaseStarthipShipID",
                 table: "Persons");
 
             migrationBuilder.DropIndex(
-                name: "IX_Persons_SpaceshipShipID",
+                name: "IX_Persons_DataBaseStarthipShipID",
                 table: "Persons");
 
             migrationBuilder.DropColumn(
-                name: "SpaceshipShipID",
+                name: "DataBaseStarthipShipID",
                 table: "Persons");
 
             migrationBuilder.AddColumn<int>(
-                name: "PersonID",
-                table: "Spaceships",
+                name: "StartshipShipID",
+                table: "Persons",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Spaceships_PersonID",
-                table: "Spaceships",
-                column: "PersonID");
+                name: "IX_Persons_StartshipShipID",
+                table: "Persons",
+                column: "StartshipShipID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Spaceships_Persons_PersonID",
-                table: "Spaceships",
-                column: "PersonID",
-                principalTable: "Persons",
-                principalColumn: "PersonID",
+                name: "FK_Persons_Spaceships_StartshipShipID",
+                table: "Persons",
+                column: "StartshipShipID",
+                principalTable: "Spaceships",
+                principalColumn: "ShipID",
                 onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Spaceships_Persons_PersonID",
-                table: "Spaceships");
+                name: "FK_Persons_Spaceships_StartshipShipID",
+                table: "Persons");
 
             migrationBuilder.DropIndex(
-                name: "IX_Spaceships_PersonID",
-                table: "Spaceships");
+                name: "IX_Persons_StartshipShipID",
+                table: "Persons");
 
             migrationBuilder.DropColumn(
-                name: "PersonID",
-                table: "Spaceships");
+                name: "StartshipShipID",
+                table: "Persons");
 
             migrationBuilder.AddColumn<int>(
-                name: "SpaceshipShipID",
+                name: "DataBaseStarthipShipID",
                 table: "Persons",
                 type: "int",
                 nullable: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Persons_SpaceshipShipID",
+                name: "IX_Persons_DataBaseStarthipShipID",
                 table: "Persons",
-                column: "SpaceshipShipID");
+                column: "DataBaseStarthipShipID");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Persons_Spaceships_SpaceshipShipID",
+                name: "FK_Persons_Spaceships_DataBaseStarthipShipID",
                 table: "Persons",
-                column: "SpaceshipShipID",
+                column: "DataBaseStarthipShipID",
                 principalTable: "Spaceships",
                 principalColumn: "ShipID",
                 onDelete: ReferentialAction.Restrict);

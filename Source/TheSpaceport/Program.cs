@@ -34,8 +34,8 @@ namespace TheSpaceport
 
     public class CreateCustomer : IAccessControl
     {
-        public Person addPerson = new Person();
-        public Spaceship addStarship = new Spaceship();
+        public DataBasePerson addPerson = new DataBasePerson();
+        public DataBaseStartship addStarship = new DataBaseStartship();
 
         private RestClient client = new RestClient("https://swapi.co/api/");
 
@@ -134,8 +134,8 @@ namespace TheSpaceport
         public IAccessControl AddToDataBase()
         {
             MyContext myContext = new MyContext();
-            myContext.Add<Person>(this.addPerson);
-            myContext.Add<Spaceship>(this.addStarship);
+            myContext.Add<DataBasePerson>(this.addPerson);
+            myContext.Add<DataBaseStartship>(this.addStarship);
             myContext.SaveChanges();
             return this;
         }
@@ -146,22 +146,27 @@ namespace TheSpaceport
         public string Name { get; set; }
     }
 
-    public class Person
+    public class DataBasePerson
     {
-        
+        [Key]
         public int PersonID { get; set; }
         public string Name { get; set; }
         public int Credits { get; set; }
-        public List<Spaceship> ShipID {get; set;}
+        public List<DataBaseStartship> Startships { get; set; }
+        
+        
+        
     }
 
-    public class Spaceship
+    public class DataBaseStartship
     {
         [Key]
         public int ShipID { get; set; }
+        public int PersonID { get; set; }
         public string ShipName { get; set; }
         public int PricePerDay { get; set; }
         public int NumberOfDays { get; set; }
+        
         
     }
 
@@ -169,8 +174,8 @@ namespace TheSpaceport
 
     public class MyContext : DbContext
     {
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<Spaceship> Spaceships { get; set; }
+        public DbSet<DataBasePerson> Persons { get; set; }
+        public DbSet<DataBaseStartship> Spaceships { get; set; }
        
 
 

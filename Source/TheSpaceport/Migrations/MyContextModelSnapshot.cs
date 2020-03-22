@@ -19,7 +19,7 @@ namespace TheSpaceport.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
                     b.Property<int>("PersonID")
                         .ValueGeneratedOnAdd()
@@ -37,17 +37,20 @@ namespace TheSpaceport.Migrations
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBaseStartship", b =>
                 {
                     b.Property<int>("ShipID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("DataBasePersonPersonID")
+                        .HasColumnType("int");
+
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonID")
+                    b.Property<int>("PersonID")
                         .HasColumnType("int");
 
                     b.Property<int>("PricePerDay")
@@ -58,16 +61,16 @@ namespace TheSpaceport.Migrations
 
                     b.HasKey("ShipID");
 
-                    b.HasIndex("PersonID");
+                    b.HasIndex("DataBasePersonPersonID");
 
                     b.ToTable("Spaceships");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBaseStartship", b =>
                 {
-                    b.HasOne("TheSpaceport.Person", null)
-                        .WithMany("ShipID")
-                        .HasForeignKey("PersonID");
+                    b.HasOne("TheSpaceport.DataBasePerson", null)
+                        .WithMany("Startships")
+                        .HasForeignKey("DataBasePersonPersonID");
                 });
 #pragma warning restore 612, 618
         }

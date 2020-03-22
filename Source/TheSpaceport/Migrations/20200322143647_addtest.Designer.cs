@@ -10,8 +10,8 @@ using TheSpaceport;
 namespace TheSpaceport.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20200322111146_test")]
-    partial class test
+    [Migration("20200322143647_addtest")]
+    partial class addtest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace TheSpaceport.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
                     b.Property<int>("PersonID")
                         .ValueGeneratedOnAdd()
@@ -34,17 +34,17 @@ namespace TheSpaceport.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SpaceshipShipID")
+                    b.Property<int?>("StartshipShipID")
                         .HasColumnType("int");
 
                     b.HasKey("PersonID");
 
-                    b.HasIndex("SpaceshipShipID");
+                    b.HasIndex("StartshipShipID");
 
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.DataBaseStartship", b =>
                 {
                     b.Property<int>("ShipID")
                         .ValueGeneratedOnAdd()
@@ -52,6 +52,9 @@ namespace TheSpaceport.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("NumberOfDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PersonID")
                         .HasColumnType("int");
 
                     b.Property<int>("PricePerDay")
@@ -65,11 +68,11 @@ namespace TheSpaceport.Migrations
                     b.ToTable("Spaceships");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Person", b =>
+            modelBuilder.Entity("TheSpaceport.DataBasePerson", b =>
                 {
-                    b.HasOne("TheSpaceport.Spaceship", null)
-                        .WithMany("Persons")
-                        .HasForeignKey("SpaceshipShipID");
+                    b.HasOne("TheSpaceport.DataBaseStartship", "Startship")
+                        .WithMany("Person")
+                        .HasForeignKey("StartshipShipID");
                 });
 #pragma warning restore 612, 618
         }
