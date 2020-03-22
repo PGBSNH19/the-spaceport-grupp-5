@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheSpaceport;
 
 namespace TheSpaceport.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20200322150103_test2")]
+    partial class test2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,18 +59,7 @@ namespace TheSpaceport.Migrations
 
                     b.HasKey("ShipID");
 
-                    b.HasIndex("PersonID");
-
                     b.ToTable("Spaceships");
-                });
-
-            modelBuilder.Entity("TheSpaceport.DataBaseStartship", b =>
-                {
-                    b.HasOne("TheSpaceport.DataBasePerson", null)
-                        .WithMany("Startships")
-                        .HasForeignKey("PersonID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

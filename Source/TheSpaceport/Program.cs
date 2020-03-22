@@ -133,8 +133,10 @@ namespace TheSpaceport
 
         public IAccessControl AddToDataBase()
         {
+            
             MyContext myContext = new MyContext();
             myContext.Add<DataBasePerson>(this.addPerson);
+            this.addStarship.PersonID = int.Parse(myContext.Entry(this.addPerson).Property("PersonID").CurrentValue.ToString());
             myContext.Add<DataBaseStartship>(this.addStarship);
             myContext.SaveChanges();
             return this;
@@ -152,16 +154,14 @@ namespace TheSpaceport
         public int PersonID { get; set; }
         public string Name { get; set; }
         public int Credits { get; set; }
+        [ForeignKey("PersonID")]
         public List<DataBaseStartship> Startships { get; set; }
-        
-        
-        
     }
 
     public class DataBaseStartship
     {
         [Key]
-        public int ShipID { get; set; }
+        public int ShipID { get; set; } 
         public int PersonID { get; set; }
         public string ShipName { get; set; }
         public int PricePerDay { get; set; }
