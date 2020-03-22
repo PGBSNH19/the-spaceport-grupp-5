@@ -11,6 +11,7 @@ using RestSharp.Deserializers;
 using RestSharp.Serialization.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TheSpaceport
 {
@@ -18,7 +19,7 @@ namespace TheSpaceport
     {
         private static void Main(string[] args)
         {
-            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge();
+            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDataBase();
         }
     }
 
@@ -28,6 +29,7 @@ namespace TheSpaceport
         IAccessControl AddFunds();
         IAccessControl StarshipControl();
         IAccessControl Charge();
+        IAccessControl AddToDataBase();
     }
 
     public class CreateCustomer : IAccessControl
@@ -128,6 +130,15 @@ namespace TheSpaceport
             }
             return this;
         }
+
+        public IAccessControl AddToDataBase()
+        {
+            MyContext myContext = new MyContext();
+            myContext.Add<Person>(this.addPerson);
+            myContext.Add<Spaceship>(this.addStarship);
+            myContext.SaveChanges();
+            return this;
+        }
     }
 
     public class Travler
@@ -137,7 +148,7 @@ namespace TheSpaceport
 
     public class Person
     {
-
+        
         public int PersonID { get; set; }
         public string Name { get; set; }
         public int Credits { get; set; }
