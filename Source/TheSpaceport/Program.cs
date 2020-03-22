@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using System.Data;
 using RestSharp;
@@ -17,33 +18,22 @@ namespace TheSpaceport
     {
         private static void Main(string[] args)
         {
-            //string test = "mamma";
-            //RestClient client = new RestClient("https://swapi.co/api/");
-
-            ////var starshipRequest = new RestRequest("starships/?search=death");
-            ////var starshipResponse = client.Execute(starshipRequest);
-            ////var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
-
-            //var personRequest = new RestRequest($"people/?search={test}", DataFormat.Json);
-            //var personResponse = client.Execute(personRequest);
-            //var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
-            var test = new CreateCustomer().PersonControl().StarshipControl().Charge();
+            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge();
         }
     }
 
     public interface IAccessControl
     {
         IAccessControl PersonControl();
-
+        IAccessControl AddFunds();
         IAccessControl StarshipControl();
-
         IAccessControl Charge();
     }
 
     public class CreateCustomer : IAccessControl
     {
-        public string name { get; set; }
-        public string ship { get; set; }
+        public Person addPerson = new Person();
+        public Spaceship addStarship = new Spaceship();
 
         private RestClient client = new RestClient("https://swapi.co/api/");
 
@@ -59,7 +49,7 @@ namespace TheSpaceport
                 if (person.results.Count > 0)
                 {
                     Console.WriteLine($"Welcome {person.results[0].name}");
-                    this.name = person.results[0].name;
+                    this.addPerson.Name = person.results[0].name;
                     a = false;
                 }
                 else
@@ -67,6 +57,26 @@ namespace TheSpaceport
                     Console.WriteLine("Access denied");
                 }
             } while (a);
+            return this;
+        }
+
+        public IAccessControl AddFunds()
+        {
+            Console.Write("Please add credits to your card (Minimum 1000 credits): ");
+            bool loop = false;
+            while(loop == false)
+            {
+                try
+                {
+                    addPerson.Credits = int.Parse(Console.ReadLine());
+                    if(addPerson.Credits >= 1000)
+                    loop = true;
+                }
+                catch
+                {
+                    Console.WriteLine("Error, please add credits to your card (Minimum 1000 credits): ");
+                }
+            }
             return this;
         }
 
@@ -82,8 +92,10 @@ namespace TheSpaceport
 
                 if (starship.results.Count > 0)
                 {
+                    
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
-                    this.ship = starship.results[0].name;
+                    this.addStarship.ShipName = starship.results[0].name;
+                    this.addStarship.PricePerDay = 1000;
                     a = false;
                 }
                 else
@@ -93,33 +105,27 @@ namespace TheSpaceport
             }
 
             while (a);
+            
             return this;
         }
 
         public IAccessControl Charge()
         {
-            bool a = true;
-            int antalDagar = 0;
-            int b = 0;
-            string s;
-            do
+            bool loop = false;
+            Console.WriteLine($"The parkingcost for {this.addStarship.ShipName} will be {this.addStarship.PricePerDay} per day " +
+                $".\nEnter how many days you want to park (Minimum 1 day): ");
+            while(loop == false)
             {
-                Console.WriteLine("To park it cost 500 kr day.\nEnter how many days you want to park? ");
-                s = Console.ReadLine();
-                if (int.TryParse(s, out b))
+                try
                 {
-                    antalDagar = int.Parse(s);
-                    if (antalDagar > 0)
-                    {
-                        Console.WriteLine($"You will park {antalDagar} days");
-                        a = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"You input was {antalDagar} and it´s not invalid input");
-                    }
+                    addStarship.NumberOfDays = int.Parse(Console.ReadLine());
+                    loop = true;
                 }
-            } while (a);
+                catch
+                {
+                    Console.WriteLine("Error, please try again");
+                }
+            }
             return this;
         }
     }
@@ -131,24 +137,31 @@ namespace TheSpaceport
 
     public class Person
     {
+
         public int PersonID { get; set; }
         public string Name { get; set; }
-        public int Age { get; set; }
+        public int Credits { get; set; }
+        public List<Spaceship> ShipID {get; set;}
     }
 
-    public class Ship
+    public class Spaceship
     {
+        [Key]
         public int ShipID { get; set; }
         public string ShipName { get; set; }
-        public int ShipLength { get; set; }
-
-        public List<Person> Persons { get; set; }
+        public int PricePerDay { get; set; }
+        public int NumberOfDays { get; set; }
+        
     }
+
+    
 
     public class MyContext : DbContext
     {
         public DbSet<Person> Persons { get; set; }
-        public DbSet<Ship> Ships { get; set; }
+        public DbSet<Spaceship> Spaceships { get; set; }
+       
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheSpaceport;
 
 namespace TheSpaceport.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20200322111146_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,7 +34,12 @@ namespace TheSpaceport.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SpaceshipShipID")
+                        .HasColumnType("int");
+
                     b.HasKey("PersonID");
+
+                    b.HasIndex("SpaceshipShipID");
 
                     b.ToTable("Persons");
                 });
@@ -47,9 +54,6 @@ namespace TheSpaceport.Migrations
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PersonID")
-                        .HasColumnType("int");
-
                     b.Property<int>("PricePerDay")
                         .HasColumnType("int");
 
@@ -58,16 +62,14 @@ namespace TheSpaceport.Migrations
 
                     b.HasKey("ShipID");
 
-                    b.HasIndex("PersonID");
-
                     b.ToTable("Spaceships");
                 });
 
-            modelBuilder.Entity("TheSpaceport.Spaceship", b =>
+            modelBuilder.Entity("TheSpaceport.Person", b =>
                 {
-                    b.HasOne("TheSpaceport.Person", null)
-                        .WithMany("ShipID")
-                        .HasForeignKey("PersonID");
+                    b.HasOne("TheSpaceport.Spaceship", null)
+                        .WithMany("Persons")
+                        .HasForeignKey("SpaceshipShipID");
                 });
 #pragma warning restore 612, 618
         }
