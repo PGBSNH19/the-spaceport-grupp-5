@@ -43,11 +43,12 @@ namespace TheSpaceport
         public string name { get; set; }
         public string ship { get; set; }
 
-        RestClient client = new RestClient("https://swapi.co/api/");
+        private static RestClient client = new RestClient("https://swapi.co/api/");
         public IAccessControl PersonControl()
         {
             Console.Write("Please enter your name: ");
             var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
+            Console.WriteLine("Searching.....");
             var personResponse = client.Execute(personRequest);
             var person = JsonConvert.DeserializeObject<CharacterRoot>(personResponse.Content);
             if(person.results.Count > 0)
@@ -65,6 +66,7 @@ namespace TheSpaceport
         {
             Console.Write("Please validate your starship: ");
             var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
+            Console.WriteLine("Searching.....");
             var starshipResponse = client.Execute(starshipRequest);
             var starship = JsonConvert.DeserializeObject<StarshipRoot>(starshipResponse.Content);
             if(starship.results.Count > 0)
