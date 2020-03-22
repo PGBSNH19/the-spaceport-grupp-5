@@ -19,7 +19,7 @@ namespace TheSpaceport
     {
         private static void Main(string[] args)
         {
-            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDatabase();
+            var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDataBase();
         }
     }
 
@@ -29,7 +29,7 @@ namespace TheSpaceport
         IAccessControl AddFunds();
         IAccessControl StarshipControl();
         IAccessControl Charge();
-        IAccessControl AddToDatabase();
+        IAccessControl AddToDataBase();
     }
 
     public class CreateCustomer : IAccessControl
@@ -131,7 +131,7 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAccessControl AddToDatabase()
+        public IAccessControl AddToDataBase()
         {
             
             MyContext myContext = new MyContext();
