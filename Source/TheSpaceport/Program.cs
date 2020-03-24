@@ -28,7 +28,7 @@ namespace TheSpaceport
 
             MyContext myContext = new MyContext();
 
-            
+
             var test2 = myContext.Persons.Where(p => p.Name == "Luke Skywalker").ToList();
             var test3 = myContext.Spaceships.Where(p => p.PersonID == test2[0].PersonID && p.Payed == false).ToList();
 
@@ -45,18 +45,18 @@ namespace TheSpaceport
             //{
             //    Console.WriteLine($"ID: {item.ShipID} Name: {item.ShipName}");
             //}
-            ControlParkingspace();
+            //ControlParkingspace();
             //predicate.DatabasePerson.PersonID == predicate.DatabaseStarship.PersonID
             //    &&
 
-
+            CheckShip("Luke Skywalker");
         }
 
         public static void ControlParkingspace()
         {
             MyContext myContext = new MyContext();
             var availableSlots = myContext.Spaceships.Where(p => p.Payed == false).ToList();
-            if(availableSlots.Count < 20)
+            if (availableSlots.Count < 20)
             {
                 AccessControl();
             }
@@ -101,8 +101,76 @@ namespace TheSpaceport
                 var newCustomer = new CreateNewCustomer().AddNameToPerson(name).AddFunds().StarshipControl().Charge().AddToDataBase();
             }
         }
-    }
 
+        public static void CheckShip(string name)
+        {
+            bool loop = false;
+            int selector;
+            MyContext context = new MyContext();
+            var personCheck = context.Persons.Where(p => p.Name == name).ToList();
+            var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.PersonID == personCheck[0].PersonID).ToList();
+            if (shipCheck.Count > 0)
+            {
+                Console.WriteLine($"Available Ships for {name}: ");
+                for (int i = 0; i <= (shipCheck.Count - 1); i++)
+                {
+                    Console.WriteLine($"[{i}] {shipCheck[i].ShipName}");
+                }
+                while (loop != true)
+                {
+
+                    Console.WriteLine("Please select a ship to checkout:  ");
+                    ConsoleKeyInfo userInput = Console.ReadKey();
+                    Console.WriteLine();
+                    if (char.IsDigit(userInput.KeyChar))
+                    {
+                        selector = int.Parse(userInput.KeyChar.ToString());
+                        Console.WriteLine($"you have selected: {shipCheck[selector].ShipName}");
+                        int ShipID = shipCheck[selector].ShipID;
+
+                        CheckOutShip(ShipID);
+
+                        loop = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("No ships available");
+            }
+
+        }
+        public static void CheckOutShip(int ID)
+        {
+            MyContext context = new MyContext();
+
+            var shipCheckout = context.Spaceships.Where(p => p.ShipID == ID).ToList();
+
+            var personCheckout = context.Persons.Where(p => p.PersonID == shipCheckout[0].PersonID).ToList();
+
+            Console.WriteLine($"Checking credits for: {personCheckout[0].Name}...");
+
+            int totCost = shipCheckout[0].PricePerDay * shipCheckout[0].PricePerDay;
+
+            Console.WriteLine("Total cost for your parking: " + " " + totCost);
+
+            if (totCost < personCheckout[0].Credits)
+            {
+                Console.WriteLine("Spaceship successfully checked-out, amount remaining on account  " + (personCheckout[0].Credits - totCost));
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine("Not enough credits registered on acocunt, please register more credits on you account to checkout your spaceship.");
+            }
+
+
+        }
+    }
     public class CreateShip : IAddStarship
     {
         DatabaseStarship createStarship = new DatabaseStarship();
@@ -165,6 +233,8 @@ namespace TheSpaceport
             myContext.SaveChanges();
             return this;
         }
+       
     }
+
     
 }
