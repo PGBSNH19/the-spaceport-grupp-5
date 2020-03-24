@@ -5,21 +5,21 @@ using Microsoft.Extensions.Configuration;
 
 namespace TheSpaceport
 {
-    public class CreateNewCustomer : IAccessControl
+    public class CreateNewCustomer : IAddPerson, IAddStarship
     {
-        public DatabasePerson addPerson = new DatabasePerson();
-        public DatabaseStarship addStarship = new DatabaseStarship();
+        public DatabasePerson createPerson = new DatabasePerson();
+        public DatabaseStarship createStarship = new DatabaseStarship();
 
         private RestClient client = new RestClient("https://swapi.co/api/");
 
-        public IAccessControl AddNameToCustomer(string name)
+        public IAddPerson AddNameToPerson(string name)
         {
             Console.WriteLine($"Welcome {name}");
-            this.addPerson.Name = name;
+            this.createPerson.Name = name;
             return this;
         }
 
-        public IAccessControl AddFunds()
+        public IAddPerson AddFunds()
         {
             Console.Write("Please add credits to your card (Minimum 1000 credits): ");
             bool loop = false;
@@ -27,8 +27,8 @@ namespace TheSpaceport
             {
                 try
                 {
-                    addPerson.Credits = int.Parse(Console.ReadLine());
-                    if (addPerson.Credits >= 1000)
+                    createPerson.Credits = int.Parse(Console.ReadLine());
+                    if (createPerson.Credits >= 1000)
                         loop = true;
                 }
                 catch
@@ -39,7 +39,7 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAccessControl StarshipControl()
+        public IAddStarship StarshipControl()
         {
             bool a = true;
             do
@@ -52,8 +52,8 @@ namespace TheSpaceport
                 if (starship.results.Count > 0)
                 {
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
-                    this.addStarship.ShipName = starship.results[0].name;
-                    this.addStarship.PricePerDay = 1000;
+                    this.createStarship.ShipName = starship.results[0].name;
+                    this.createStarship.PricePerDay = 1000;
                     a = false;
                 }
                 else
@@ -67,16 +67,16 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAccessControl Charge()
+        public IAddStarship Charge()
         {
             bool loop = false;
-            Console.WriteLine($"The parkingcost for {this.addStarship.ShipName} will be {this.addStarship.PricePerDay} per day " +
+            Console.WriteLine($"The parkingcost for {this.createStarship.ShipName} will be {this.createStarship.PricePerDay} per day " +
                 $".\nEnter how many days you want to park (Minimum 1 day): ");
             while (loop == false)
             {
                 try
                 {
-                    addStarship.NumberOfDays = int.Parse(Console.ReadLine());
+                    createStarship.NumberOfDays = int.Parse(Console.ReadLine());
                     loop = true;
                 }
                 catch
@@ -87,13 +87,13 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAccessControl AddToDataBase()
+        public IAddStarship AddToDataBase()
         {
 
             MyContext myContext = new MyContext();
-            myContext.Add<DatabasePerson>(this.addPerson);
-            this.addStarship.PersonID = int.Parse(myContext.Entry(this.addPerson).Property("PersonID").CurrentValue.ToString());
-            myContext.Add<DatabaseStarship>(this.addStarship);
+            myContext.Add<DatabasePerson>(this.createPerson);
+            this.createStarship.PersonID = int.Parse(myContext.Entry(this.createPerson).Property("PersonID").CurrentValue.ToString());
+            myContext.Add<DatabaseStarship>(this.createStarship);
             myContext.SaveChanges();
             return this;
         }
