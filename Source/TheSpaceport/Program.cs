@@ -19,6 +19,7 @@ namespace TheSpaceport
     public class Program
     {
         public static string defaultConnectionString { get; set; }
+        
 
         public static void Main(string[] args)
         {
@@ -26,11 +27,11 @@ namespace TheSpaceport
             var config = builder.Build();
             defaultConnectionString = config.GetConnectionString("DefaultConnection");
 
-            MyContext myContext = new MyContext();
+            //MyContext myContext = new MyContext();
 
 
-            var test2 = myContext.Persons.Where(p => p.Name == "Luke Skywalker").ToList();
-            var test3 = myContext.Spaceships.Where(p => p.PersonID == test2[0].PersonID && p.Payed == false).ToList();
+            //var test2 = myContext.Persons.Where(p => p.Name == "Luke Skywalker").ToList();
+            //var test3 = myContext.Spaceships.Where(p => p.PersonID == test2[0].PersonID && p.Payed == false).ToList();
 
 
             //var test = myContext.Persons.
@@ -49,7 +50,7 @@ namespace TheSpaceport
             //predicate.DatabasePerson.PersonID == predicate.DatabaseStarship.PersonID
             //    &&
 
-            CheckShip("Luke Skywalker");
+            CheckingForShips("Luke Skywalker");
         }
 
         public static void ControlParkingspace()
@@ -102,138 +103,74 @@ namespace TheSpaceport
             }
         }
 
-        public static void CheckShip(string name)
+        public static void CheckingForShips(string name)
         {
-            bool loop = false;
-            int selector;
+            
             MyContext context = new MyContext();
             var personCheck = context.Persons.Where(p => p.Name == name).ToList();
             var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.PersonID == personCheck[0].PersonID).ToList();
             if (shipCheck.Count > 0)
             {
-                Console.WriteLine($"Available Ships for {name}: ");
-                for (int i = 0; i <= (shipCheck.Count - 1); i++)
-                {
-                    Console.WriteLine($"[{i}] {shipCheck[i].ShipName}");
-                }
-                while (loop != true)
-                {
 
-                    Console.WriteLine("Please select a ship to checkout:  ");
-                    ConsoleKeyInfo userInput = Console.ReadKey();
-                    Console.WriteLine();
-                    if (char.IsDigit(userInput.KeyChar))
-                    {
-                        selector = int.Parse(userInput.KeyChar.ToString());
-                        Console.WriteLine($"you have selected: {shipCheck[selector].ShipName}");
-                        int ShipID = shipCheck[selector].ShipID;
-
-                        CheckOutShip(ShipID);
-
-                        loop = true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid input");
-                    }
-                }
+                ShowAvailableShip(shipCheck, personCheck[0]);
             }
             else
             {
-                Console.WriteLine("No ships available");
+                Console.WriteLine($"No ships available for {personCheck[0].Name}");
             }
 
         }
-        public static void CheckOutShip(int ID)
+
+        public static void ShowAvailableShip(List<DatabaseStarship> ships, DatabasePerson person)
         {
-            MyContext context = new MyContext();
-
-            var shipCheckout = context.Spaceships.Where(p => p.ShipID == ID).ToList();
-
-            var personCheckout = context.Persons.Where(p => p.PersonID == shipCheckout[0].PersonID).ToList();
-
-            Console.WriteLine($"Checking credits for: {personCheckout[0].Name}...");
-
-            int totCost = shipCheckout[0].PricePerDay * shipCheckout[0].PricePerDay;
-
-            Console.WriteLine("Total cost for your parking: " + " " + totCost);
-
-            if (totCost < personCheckout[0].Credits)
-            {
-                Console.WriteLine("Spaceship successfully checked-out, amount remaining on account  " + (personCheckout[0].Credits - totCost));
-                Console.ReadKey();
-            }
-            else
-            {
-                Console.WriteLine("Not enough credits registered on acocunt, please register more credits on you account to checkout your spaceship.");
-            }
-
-
-        }
-    }
-    public class CreateShip : IAddStarship
-    {
-        DatabaseStarship createStarship = new DatabaseStarship();
-        DatabasePerson createPerson { get; set; }
-        
-        public CreateShip(DatabasePerson person)
-        {
-            this.createPerson = person;
-        }
-
-        public IAddStarship StarshipControl()
-        {
-            RestClient client = new RestClient("https://swapi.co/api/");
             bool loop = false;
-            while (loop == false)
+            int selector;
+            Console.WriteLine($"{person.Name} \n" +
+                $"Current credits {person.Credits}\n" +
+                $"Avaible ships to checkout: ");
+            for (int i = 0; i <= (ships.Count - 1); i++)
             {
-                Console.Write("Please validate your starship: ");
-                var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
-                var starshipResponse = client.Execute(starshipRequest);
-                var starship = JsonConvert.DeserializeObject<JSONStarshipRoot>(starshipResponse.Content);
+                Console.WriteLine($"[{i}] {ships[i].ShipName}");
+            }
+            while (loop != true)
+            {
 
-                if (starship.results.Count > 0)
+                Console.WriteLine("Please select a ship to checkout:  ");
+                ConsoleKeyInfo userInput = Console.ReadKey();
+                if (char.IsDigit(userInput.KeyChar))
                 {
-                    Console.WriteLine($"{starship.results[0].name} ready for parking");
-                    this.createStarship.ShipName = starship.results[0].name;
-                    this.createStarship.PricePerDay = 1000;
+                    selector = int.Parse(userInput.KeyChar.ToString());
+                    Console.WriteLine($"you have selected: {ships[selector].ShipName}");
+                    CheckOutShip(ships[selector], person);
                     loop = true;
                 }
                 else
                 {
-                    Console.WriteLine("Unauthorised spaceship");
+                    Console.WriteLine("Invalid input");
                 }
             }
-            return this;
         }
-        public IAddStarship Charge()
+        public static void CheckOutShip(DatabaseStarship shipToRemove, DatabasePerson person)
         {
-            bool loop = false;
-            Console.WriteLine($"The parkingcost for {this.createStarship.ShipName} will be {this.createStarship.PricePerDay} per day " +
-                $".\nEnter how many days you want to park (Minimum 1 day): ");
-            while (loop == false)
+            int totalsum = shipToRemove.NumberOfDays * shipToRemove.PricePerDay;
+            if (totalsum <= person.Credits)
             {
-                try
-                {
-                    createStarship.NumberOfDays = int.Parse(Console.ReadLine());
-                    loop = true;
-                }
-                catch
-                {
-                    Console.WriteLine("Error, please try again");
-                }
+                MyContext myContext = new MyContext();
+                person.Credits = person.Credits - totalsum;
+                shipToRemove.Payed = true;
+                myContext.Persons.Update(person);
+                myContext.Spaceships.Update(shipToRemove);
+                myContext.SaveChanges();
+                Console.WriteLine($"The check out for {shipToRemove.ShipName} succeded, {totalsum} have been withdrawn from your card\n" +
+                    $"your current amount of credits: {person.Credits}");
+
+
             }
-            return this;
+            else
+            {
+                Console.WriteLine($"Not enough credits on your card {person.Name}");
+            }
         }
-        public IAddStarship AddToDataBase()
-        {
-            MyContext myContext = new MyContext();
-            this.createStarship.PersonID = this.createPerson.PersonID;
-            myContext.Add<DatabaseStarship>(this.createStarship);
-            myContext.SaveChanges();
-            return this;
-        }
-       
     }
 
     
