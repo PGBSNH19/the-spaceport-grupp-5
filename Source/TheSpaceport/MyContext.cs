@@ -5,9 +5,14 @@ using System.Text;
 
 namespace TheSpaceport
 {
-    public class MyContext : DbContext
+    public partial class MyContext : DbContext
     {
         public string defaultConnectionString;
+
+        public MyContext(string a)
+        {
+            defaultConnectionString = a;
+        }
 
         public DbSet<DatabasePerson> Persons { get; set; }
         public DbSet<DatabaseStarship> Spaceships { get; set; }

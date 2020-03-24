@@ -17,15 +17,15 @@ using System.IO;
 
 namespace TheSpaceport
 {
-    public class Program : MyContext
+    public class Program
     {
-        public void Main(string[] args)
+        private static void Main(string[] args)
         {
-            //var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
-            var environmentName = Environment.GetEnvironmentVariable("SettingsEnviroment");
-            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").AddJsonFile($"appsettings.{environmentName}.json", optional: true);
+            var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             var config = builder.Build();
-            defaultConnectionString = config.GetConnectionString("DefaultConnection");
+            var defaultConnectionString = config.GetConnectionString("DefaultConnection");
+
+            MyContext d = new MyContext(defaultConnectionString);
 
             var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDataBase();
         }
