@@ -12,6 +12,7 @@ using System.IO;
 using RestSharp;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace TheSpaceport
 {
@@ -24,8 +25,31 @@ namespace TheSpaceport
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             var config = builder.Build();
             defaultConnectionString = config.GetConnectionString("DefaultConnection");
-            ControlParkingspace();
+
+            MyContext myContext = new MyContext();
+
             
+            var test2 = myContext.Persons.Where(p => p.Name == "Luke Skywalker").ToList();
+            var test3 = myContext.Spaceships.Where(p => p.PersonID == test2[0].PersonID && p.Payed == false).ToList();
+
+
+            //var test = myContext.Persons.
+            //    Join(myContext.Spaceships,
+            //    person => person.PersonID,
+            //    ship => ship.PersonID,
+            //    (person, ship) => new { DatabasePerson = person, DatabaseStarship = ship })
+            //    .Where(predicate => predicate.DatabasePerson.Name == "Luke Skywalker" && predicate.DatabaseStarship.Payed == false).ToList();
+
+            //Console.WriteLine(test[0].DatabasePerson.Name);
+            //foreach (var item in test[0].DatabasePerson.Startships)
+            //{
+            //    Console.WriteLine($"ID: {item.ShipID} Name: {item.ShipName}");
+            //}
+            ControlParkingspace();
+            //predicate.DatabasePerson.PersonID == predicate.DatabaseStarship.PersonID
+            //    &&
+
+
         }
 
         public static void ControlParkingspace()

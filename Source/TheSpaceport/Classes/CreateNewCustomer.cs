@@ -54,13 +54,15 @@ namespace TheSpaceport
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
                     this.createStarship.ShipName = starship.results[0].name;
                     this.createStarship.PricePerDay = 1000;
-                    loop = false;
+                    loop = true;
                 }
                 else
                 {
                     Console.WriteLine("Unauthorised spaceship");
                 }
             }
+
+           
 
             return this;
         }
