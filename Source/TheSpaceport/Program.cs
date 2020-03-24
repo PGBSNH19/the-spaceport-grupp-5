@@ -19,13 +19,13 @@ namespace TheSpaceport
 {
     public class Program
     {
-        private static void Main(string[] args)
+        public static string defaultConnectionString { get; set; }
+
+        public static void Main(string[] args)
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
             var config = builder.Build();
-            var defaultConnectionString = config.GetConnectionString("DefaultConnection");
-
-            MyContext d = new MyContext(defaultConnectionString);
+            defaultConnectionString = config.GetConnectionString("DefaultConnection");
 
             var test = new CreateCustomer().PersonControl().AddFunds().StarshipControl().Charge().AddToDataBase();
         }
