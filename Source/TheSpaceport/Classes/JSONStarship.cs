@@ -2,7 +2,7 @@
 
 namespace TheSpaceport
 {
-    public class Starship
+    public class JSONStarship
     {
         public string name { get; set; }
         public string model { get; set; }
@@ -24,11 +24,11 @@ namespace TheSpaceport
         public string edited { get; set; }
     }
 
-    public class StarshipRoot
+    public class JSONStarshipRoot
     {
         public int count { get; set; }
         public string next { get; set; }
         public object previos { get; set; }
-        public List<Starship> results { get; set; }
+        public List<JSONStarship> results { get; set; }
     }
 }

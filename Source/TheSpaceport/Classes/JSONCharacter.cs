@@ -2,7 +2,7 @@
 
 namespace TheSpaceport
 {
-    public class Character
+    public class JSONCharacter
     {
         public string name { get; set; }
         public string birth_year{get; set;}
@@ -22,11 +22,11 @@ namespace TheSpaceport
         public string edited { get; set; }
     }
 
-    public class CharacterRoot
+    public class JSONCharacterRoot
     {
         public int count { get; set; }
         public string next { get; set; }
         public object previos { get; set; }
-        public List<Character> results { get; set; }
+        public List<JSONCharacter> results { get; set; }
     }
 }
