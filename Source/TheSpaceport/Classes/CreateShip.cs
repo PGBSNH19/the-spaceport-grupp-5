@@ -64,7 +64,7 @@ namespace TheSpaceport
         public IAddStarship AddToDataBase()
         {
             MyContext myContext = new MyContext();
-            this.createStarship.PersonID = this.createPerson.PersonID;
+            this.createStarship.Person = createPerson;
             myContext.Add<DatabaseStarship>(this.createStarship);
             myContext.SaveChanges();
             return this;

@@ -49,7 +49,9 @@ namespace TheSpaceport
             //predicate.DatabasePerson.PersonID == predicate.DatabaseStarship.PersonID
             //    &&
 
-            CheckingForShips("Luke Skywalker");
+            //CheckingForShips("Luke Skywalker");
+            MyContext hej = new MyContext();
+            var a = hej.Spaceships.Where(s => s.Person.PersonID == 1).ToList();
         }
 
         public static void ControlParkingspace()
@@ -107,7 +109,7 @@ namespace TheSpaceport
         {
             MyContext context = new MyContext();
             var personCheck = context.Persons.Where(p => p.Name == name).ToList();
-            var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.PersonID == personCheck[0].PersonID).ToList();
+            var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.Person == personCheck[0]).ToList();
             if (shipCheck.Count > 0)
             {
                 ShowAvailableShip(shipCheck, personCheck[0]);
