@@ -7,9 +7,9 @@ namespace TheSpaceport
 {
     public class CreateShip : IAddStarship
     {
-        DatabaseStarship createStarship = new DatabaseStarship();
-        DatabasePerson createPerson { get; set; }
-        
+        private DatabaseStarship createStarship = new DatabaseStarship();
+        private DatabasePerson createPerson { get; set; }
+
         public CreateShip(DatabasePerson person)
         {
             this.createPerson = person;
@@ -18,8 +18,8 @@ namespace TheSpaceport
         public IAddStarship StarshipControl()
         {
             RestClient client = new RestClient("https://swapi.co/api/");
-            bool loop = false;
-            while (loop == false)
+            bool loop = true;
+            while (loop)
             {
                 Console.Write("Please validate your starship: ");
                 var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
@@ -31,7 +31,7 @@ namespace TheSpaceport
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
                     this.createStarship.ShipName = starship.results[0].name;
                     this.createStarship.PricePerDay = 1000;
-                    loop = true;
+                    loop = false;
                 }
                 else
                 {
@@ -40,17 +40,18 @@ namespace TheSpaceport
             }
             return this;
         }
+
         public IAddStarship Charge()
         {
-            bool loop = false;
+            bool loop = true;
             Console.WriteLine($"The parkingcost for {this.createStarship.ShipName} will be {this.createStarship.PricePerDay} per day " +
                 $".\nEnter how many days you want to park (Minimum 1 day): ");
-            while (loop == false)
+            while (loop)
             {
                 try
                 {
                     createStarship.NumberOfDays = int.Parse(Console.ReadLine());
-                    loop = true;
+                    loop = false;
                 }
                 catch
                 {
@@ -59,6 +60,7 @@ namespace TheSpaceport
             }
             return this;
         }
+
         public IAddStarship AddToDataBase()
         {
             MyContext myContext = new MyContext();
@@ -67,8 +69,5 @@ namespace TheSpaceport
             myContext.SaveChanges();
             return this;
         }
-       
     }
-
-    
 }

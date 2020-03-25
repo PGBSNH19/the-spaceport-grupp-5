@@ -13,6 +13,4 @@ namespace TheSpaceport
         public int NumberOfDays { get; set; }
         public bool Payed { get; set; }
     }
-
-    
 }

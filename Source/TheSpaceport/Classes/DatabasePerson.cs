@@ -14,8 +14,5 @@ namespace TheSpaceport
 
         [ForeignKey("PersonID")]
         public List<DatabaseStarship> Startships { get; set; }
-
     }
-
-    
 }

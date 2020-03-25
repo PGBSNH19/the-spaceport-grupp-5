@@ -41,8 +41,8 @@ namespace TheSpaceport
 
         public IAddStarship StarshipControl()
         {
-            bool loop = false;
-            while(loop == false)
+            bool loop = true;
+            while (loop)
             {
                 Console.Write("Please validate your starship: ");
                 var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
@@ -54,7 +54,7 @@ namespace TheSpaceport
                     Console.WriteLine($"{starship.results[0].name} ready for parking");
                     this.createStarship.ShipName = starship.results[0].name;
                     this.createStarship.PricePerDay = 1000;
-                    loop = true;
+                    loop = false;
                 }
                 else
                 {
@@ -62,22 +62,20 @@ namespace TheSpaceport
                 }
             }
 
-           
-
             return this;
         }
 
         public IAddStarship Charge()
         {
-            bool loop = false;
+            bool loop = true;
             Console.WriteLine($"The parkingcost for {this.createStarship.ShipName} will be {this.createStarship.PricePerDay} per day " +
                 $".\nEnter how many days you want to park (Minimum 1 day): ");
-            while (loop == false)
+            while (loop)
             {
                 try
                 {
                     createStarship.NumberOfDays = int.Parse(Console.ReadLine());
-                    loop = true;
+                    loop = false;
                 }
                 catch
                 {
@@ -89,7 +87,6 @@ namespace TheSpaceport
 
         public IAddStarship AddToDataBase()
         {
-
             MyContext myContext = new MyContext();
             myContext.Add<DatabasePerson>(this.createPerson);
             this.createStarship.PersonID = int.Parse(myContext.Entry(this.createPerson).Property("PersonID").CurrentValue.ToString());
@@ -97,8 +94,5 @@ namespace TheSpaceport
             myContext.SaveChanges();
             return this;
         }
-
     }
-
-    
 }

@@ -62,15 +62,15 @@ namespace TheSpaceport
             }
             else
             {
-                Console.WriteLine("No sparkingslots are available for the moment, please come back later!");
+                Console.WriteLine("No parkingslots are available for the moment, please come back later!");
             }
         }
 
         public static void AccessControl()
         {
             RestClient client = new RestClient("https://swapi.co/api/");
-            bool loop = false;
-            while (loop == false)
+            bool loop = true;
+            while (loop)
             {
                 Console.Write("Please enter your name: ");
                 var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
@@ -79,7 +79,7 @@ namespace TheSpaceport
                 if (person.results.Count > 0)
                 {
                     ControlPersonInDatabase(person.results[0].name);
-                    loop = true;
+                    loop = false;
                 }
                 else
                 {
@@ -120,7 +120,7 @@ namespace TheSpaceport
 
         public static void ShowAvailableShip(List<DatabaseStarship> ships, DatabasePerson person)
         {
-            bool loop = false;
+            bool loop = true;
             int selector;
             Console.WriteLine($"{person.Name} \n" +
                 $"Current credits {person.Credits}\n" +
@@ -129,7 +129,7 @@ namespace TheSpaceport
             {
                 Console.WriteLine($"[{i}] {ships[i].ShipName}");
             }
-            while (loop != true)
+            while (loop)
             {
                 Console.WriteLine("Please select a ship to checkout:  ");
                 ConsoleKeyInfo userInput = Console.ReadKey();
@@ -138,7 +138,7 @@ namespace TheSpaceport
                     selector = int.Parse(userInput.KeyChar.ToString());
                     Console.WriteLine($"you have selected: {ships[selector].ShipName}");
                     CheckOutShip(ships[selector], person);
-                    loop = true;
+                    loop = false;
                 }
                 else
                 {
