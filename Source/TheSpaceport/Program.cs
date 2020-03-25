@@ -19,7 +19,6 @@ namespace TheSpaceport
     public class Program
     {
         public static string defaultConnectionString { get; set; }
-        
 
         public static void Main(string[] args)
         {
@@ -27,12 +26,12 @@ namespace TheSpaceport
             var config = builder.Build();
             defaultConnectionString = config.GetConnectionString("DefaultConnection");
 
-            //MyContext myContext = new MyContext();
+            // inte helt färdigt än väntar på switchar för att kunna köra hela programmet.
 
+            //MyContext myContext = new MyContext();
 
             //var test2 = myContext.Persons.Where(p => p.Name == "Luke Skywalker").ToList();
             //var test3 = myContext.Spaceships.Where(p => p.PersonID == test2[0].PersonID && p.Payed == false).ToList();
-
 
             //var test = myContext.Persons.
             //    Join(myContext.Spaceships,
@@ -88,6 +87,7 @@ namespace TheSpaceport
                 }
             }
         }
+
         public static void ControlPersonInDatabase(string name)
         {
             MyContext context = new MyContext();
@@ -105,20 +105,17 @@ namespace TheSpaceport
 
         public static void CheckingForShips(string name)
         {
-            
             MyContext context = new MyContext();
             var personCheck = context.Persons.Where(p => p.Name == name).ToList();
             var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.PersonID == personCheck[0].PersonID).ToList();
             if (shipCheck.Count > 0)
             {
-
                 ShowAvailableShip(shipCheck, personCheck[0]);
             }
             else
             {
                 Console.WriteLine($"No ships available for {personCheck[0].Name}");
             }
-
         }
 
         public static void ShowAvailableShip(List<DatabaseStarship> ships, DatabasePerson person)
@@ -134,7 +131,6 @@ namespace TheSpaceport
             }
             while (loop != true)
             {
-
                 Console.WriteLine("Please select a ship to checkout:  ");
                 ConsoleKeyInfo userInput = Console.ReadKey();
                 if (char.IsDigit(userInput.KeyChar))
@@ -150,6 +146,7 @@ namespace TheSpaceport
                 }
             }
         }
+
         public static void CheckOutShip(DatabaseStarship shipToRemove, DatabasePerson person)
         {
             int totalsum = shipToRemove.NumberOfDays * shipToRemove.PricePerDay;
@@ -163,8 +160,6 @@ namespace TheSpaceport
                 myContext.SaveChanges();
                 Console.WriteLine($"The check out for {shipToRemove.ShipName} succeded, {totalsum} have been withdrawn from your card\n" +
                     $"your current amount of credits: {person.Credits}");
-
-
             }
             else
             {
@@ -172,6 +167,4 @@ namespace TheSpaceport
             }
         }
     }
-
-    
 }
