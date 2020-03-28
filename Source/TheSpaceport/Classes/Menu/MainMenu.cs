@@ -2,7 +2,7 @@
 
 namespace TheSpaceport
 {
-    public class MainMenu : MenuDockStarship
+    public class MainMenu : Login
     {
         public static void Menu()
         {
