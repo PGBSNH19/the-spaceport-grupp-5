@@ -2,6 +2,7 @@
 using RestSharp;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace TheSpaceport
 {
@@ -10,7 +11,7 @@ namespace TheSpaceport
         private MyContext myContext = new MyContext();
         public DatabasePerson createPerson = new DatabasePerson();
 
-        private RestClient client = new RestClient("https://swapi.co/api/");
+        public string Name;
 
         public IAddPerson AddNameToPerson(string name)
         {
@@ -27,9 +28,12 @@ namespace TheSpaceport
             {
                 try
                 {
-                    createPerson.Credits = int.Parse(Console.ReadLine());
-                    if (createPerson.Credits >= 1000)
+                    int inputCreadit = int.Parse(Console.ReadLine());
+                    if (inputCreadit >= 1000)
+                    {
+                        createPerson.Credits = inputCreadit;
                         loop = false;
+                    }
                 }
                 catch
                 {
@@ -37,6 +41,31 @@ namespace TheSpaceport
                 }
             }
             return this;
+        }
+
+        public void AddMoreFunds(DatabasePerson person)
+        {
+            Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
+            int inputCreadits = int.Parse(Console.ReadLine());
+
+            bool loop = true;
+            while (loop)
+            {
+                try
+                {
+                    if (inputCreadits >= 1000)
+                    {
+                        person.Credits = inputCreadits + person.Credits;
+                        myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person.Credits);
+                        myContext.SaveChanges();
+                        loop = false;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Error, please add credits to your card (Minimum 1000 credits): ");
+                }
+            }
         }
 
         public IConfigDatabase UpdateDatabase()

@@ -8,6 +8,8 @@ namespace TheSpaceport
 {
     public class Login
     {
+        private static MyContext context = new MyContext();
+
         public static void AccessControl()
         {
             RestClient client = new RestClient("https://swapi.co/api/");
@@ -15,6 +17,7 @@ namespace TheSpaceport
             while (loop)
             {
                 Console.Write("Please enter your name: ");
+
                 var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
                 var personResponse = client.Execute(personRequest);
                 var person = JsonConvert.DeserializeObject<JSONCharacterRoot>(personResponse.Content);
@@ -33,12 +36,24 @@ namespace TheSpaceport
 
         public static void ControlPersonInDatabase(string personName)
         {
-            MyContext context = new MyContext();
             var personCheck = context.Persons.Where(p => p.Name == personName).FirstOrDefault();
+
             if (personCheck != null)
             {
                 Console.WriteLine($"Welcome back {personName}");
                 MainMenu.Menu(personCheck);
+
+                //Console.WriteLine("Do you want to add mony? \n");
+                //Console.WriteLine("[0] - Yes\n");
+                //Console.WriteLine("[1] - No\n");
+                //int yesNo = int.Parse(Console.ReadLine());
+
+                //if (yesNo == 0)
+                //{
+                //}
+                //else if (yesNo == 1)
+                //{
+                //}
             }
             else
             {

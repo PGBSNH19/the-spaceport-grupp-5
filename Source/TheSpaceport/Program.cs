@@ -20,30 +20,27 @@ namespace TheSpaceport
             AccessControl();
         }
 
-        public void login()
-        {
-            // Kollar om personen finns i API
-            AccessControl();
-            // komma in i menyn
-            //Menu();
+        // Kollar om personen finns i API
+        //AccessControl();
+        // komma in i menyn
+        //Menu();
 
-            // kollar om det finns ledig parkering
-            //ControlParkingspace();
+        // kollar om det finns ledig parkering
+        //ControlParkingspace();
 
-            // kollar om skeppet finns i API
-            //StarshipControl();
+        // kollar om skeppet finns i API
+        //StarshipControl();
 
-            //// lägg till pengar i ditt konto
-            //AddFunds();
+        //// lägg till pengar i ditt konto
+        //AddFunds();
 
-            //// hur lännge du vill parkera
-            //Charge();
+        //// hur lännge du vill parkera
+        //Charge();
 
-            //// lägger till i databasen
-            //AddToDataBase();
+        //// lägger till i databasen
+        //AddToDataBase();
 
-            // skapar eller kollar om
-        }
+        // skapar eller kollar om
 
         public static void ControlParkingspace(DatabasePerson person)
         {

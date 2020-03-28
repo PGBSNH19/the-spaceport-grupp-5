@@ -4,6 +4,8 @@ namespace TheSpaceport
 {
     public class MainMenu : Login
     {
+        public static CreateNewCustomer a = new CreateNewCustomer();
+
         public static void Menu(DatabasePerson person)
         {
             bool menu = true;
@@ -15,7 +17,8 @@ namespace TheSpaceport
                 Console.WriteLine("[0] Dock your ship");
                 Console.WriteLine("[1] Checkout ship");
                 Console.WriteLine("[2] Docking history");
-                Console.WriteLine("[3] Exit");
+                Console.WriteLine("[3] Add more Funds");
+                Console.WriteLine("[4] Exit");
 
                 string option = Console.ReadLine();
 
@@ -36,7 +39,7 @@ namespace TheSpaceport
                         break;
 
                     case "3":
-                        MenuCheckOutStarship.History(person);
+                        a.AddMoreFunds(person);
                         break;
 
                     case "4":
