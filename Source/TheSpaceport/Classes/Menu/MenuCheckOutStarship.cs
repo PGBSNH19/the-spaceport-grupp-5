@@ -90,11 +90,18 @@ namespace TheSpaceport
             Console.WriteLine("This is your History:");
 
             var checkPerson = context.Persons.Where(p => p.PersonID == Person.PersonID).ToList();
-            var checkShip = context.Spaceships.Where(p => p.Payed == true && p.Person == checkPerson[0]).ToList();
+            var checkShip = context.Spaceships.Where(p=> p.Person == checkPerson[0]).ToList();
 
             for (int i = 0; i < checkShip.Count; i++)
             {
-                Console.WriteLine($"[{i}] {checkShip[i].ShipName}, was parked here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays}. ");
+                if(checkShip[i].Payed == true)
+                {
+                    Console.WriteLine($"[{i}] {checkShip[i].ShipName}, was parked here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays} and has been checked-out. ");
+                }
+                else
+                {
+                    Console.WriteLine($"[{i}] {checkShip[i].ShipName}, is going to be here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays} and has not been checked-out. ");
+                }
             }
         }
     }
