@@ -85,20 +85,16 @@ namespace TheSpaceport
             }
         }
 
-        public static void History(DatabasePerson name)
+        public static void History(DatabasePerson Person)
         {
-            Console.WriteLine("This is your History");
+            Console.WriteLine("This is your History:");
 
-            List<DatabasePerson> list = new List<DatabasePerson>();
-
-            List<DatabasePerson> newList = list.Where(p => p.PersonID == name.PersonID && p.Startships.Any(u => u.Payed == false)).ToList();
-
-            var checkPerson = context.Persons.Where(p => p.PersonID == name.PersonID).ToList();
+            var checkPerson = context.Persons.Where(p => p.PersonID == Person.PersonID).ToList();
             var checkShip = context.Spaceships.Where(p => p.Payed == true && p.Person == checkPerson[0]).ToList();
 
             for (int i = 0; i < checkShip.Count; i++)
             {
-                Console.WriteLine($"[{i}] {checkShip[i].ShipName}");
+                Console.WriteLine($"[{i}] {checkShip[i].ShipName}, was parked here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays}. ");
             }
         }
     }
