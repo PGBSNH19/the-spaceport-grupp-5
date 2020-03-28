@@ -39,7 +39,7 @@ namespace TheSpaceport
                         break;
 
                     case "3":
-                        a.AddMoreFunds(person);
+                        MenuAddCredits.AddMoreFunds(person);
                         break;
 
                     case "4":

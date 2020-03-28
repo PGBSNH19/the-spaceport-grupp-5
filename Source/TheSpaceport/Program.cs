@@ -56,5 +56,31 @@ namespace TheSpaceport
                 Console.WriteLine("No parkingslots are available for the moment, please come back later!");
             }
         }
+
+        public static void AddMoreFunds(DatabasePerson person)
+        {
+            Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
+
+            bool loop = true;
+            while (loop)
+            {
+                try
+                {
+                    int inputCreadits = int.Parse(Console.ReadLine());
+                    if (inputCreadits >= 1000)
+                    {
+                        MyContext myContext = new MyContext();
+                        person.Credits = inputCreadits + person.Credits;
+                        myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
+                        myContext.SaveChanges();
+                        loop = false;
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Error, please add credits to your card (Minimum 1000 credits): ");
+                }
+            }
+        }
     }
 }

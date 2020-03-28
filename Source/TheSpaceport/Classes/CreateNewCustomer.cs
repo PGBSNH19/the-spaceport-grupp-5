@@ -46,17 +46,17 @@ namespace TheSpaceport
         public void AddMoreFunds(DatabasePerson person)
         {
             Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
-            int inputCreadits = int.Parse(Console.ReadLine());
 
             bool loop = true;
             while (loop)
             {
                 try
                 {
+                    int inputCreadits = int.Parse(Console.ReadLine());
                     if (inputCreadits >= 1000)
                     {
                         person.Credits = inputCreadits + person.Credits;
-                        myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person.Credits);
+                        myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
                         myContext.SaveChanges();
                         loop = false;
                     }
