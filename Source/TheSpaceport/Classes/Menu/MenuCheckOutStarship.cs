@@ -2,36 +2,50 @@
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheSpaceport
 {
     public class MenuCheckOutStarship
     {
-        public static void CheckingForShips(string name)
+        private static MyContext context = new MyContext();
+
+        public static void CheckingForShips(DatabasePerson name)
         {
-            MyContext context = new MyContext();
-            var personCheck = context.Persons.Where(p => p.Name == name).ToList();
-            var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.Person == personCheck[0]).ToList();
-            if (shipCheck.Count > 0)
+            //var personCheck = context.Persons.Include(p => p.Startships).Where(p => p.PersonID == name.PersonID).FirstOrDefault();
+            //var a = context.Spaceships.Where(p => p.Payed == false);
+
+            //var personCheck = context.Persons.Where(p => p.PersonID == name.PersonID).ToList();
+            //var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.Person == personCheck[0]).ToList();
+
+            //List<DatabasePerson> list = new List<DatabasePerson>();
+            //List<DatabasePerson> newList = list.Where(p => p.PersonID == name.PersonID && p.Startships.Any(u => u.Payed == false)).ToList();
+
+            var test = context.Persons.Where(p => p.PersonID == name.PersonID).Select(m => new DatabasePerson { PersonID = m.PersonID, Name = m.Name, Credits = m.Credits, Startships = m.Startships.Where(s => s.Payed == false).ToList() }).FirstOrDefault();
+
+            if (test.Startships.Count > 0)
             {
-                ShowAvailableShip(shipCheck, personCheck[0], context);
+                ShowAvailableShip(test, context);
             }
             else
             {
-                Console.WriteLine($"No ships available for {personCheck[0].Name}");
+                Console.WriteLine($"No ships available for {name.Name}");
             }
         }
 
-        public static void ShowAvailableShip(List<DatabaseStarship> ships, DatabasePerson person, MyContext context)
+        public static void ShowAvailableShip(DatabasePerson person, MyContext context)
         {
             bool loop = true;
             int selector;
             Console.WriteLine($"{person.Name} \n" +
                 $"Current credits {person.Credits}\n" +
                 $"Avaible ships to checkout: ");
-            for (int i = 0; i <= (ships.Count - 1); i++)
+            for (int i = 0; i <= (person.Startships.Count - 1); i++)
             {
-                Console.WriteLine($"[{i}] {ships[i].ShipName}");
+                if (person.Startships[i].Payed == false)
+                {
+                    Console.WriteLine($"[{i}] {person.Startships[i].ShipName}");
+                }
             }
             while (loop)
             {
@@ -40,8 +54,8 @@ namespace TheSpaceport
                 if (char.IsDigit(userInput.KeyChar))
                 {
                     selector = int.Parse(userInput.KeyChar.ToString());
-                    Console.WriteLine($"you have selected: {ships[selector].ShipName}");
-                    CheckOutShip(ships[selector], person, context);
+                    Console.WriteLine($"you have selected: {person.Startships[selector].ShipName}");
+                    CheckOutShip(person.Startships[selector], person, context);
                     loop = false;
                 }
                 else
@@ -56,17 +70,35 @@ namespace TheSpaceport
             int totalsum = shipToRemove.NumberOfDays * shipToRemove.PricePerDay;
             if (totalsum <= person.Credits)
             {
-                person.Credits = person.Credits - totalsum;
                 shipToRemove.Payed = true;
-                myContext.Persons.Update(person);
-                myContext.Spaceships.Update(shipToRemove);
+                person.Credits = person.Credits - totalsum;
+                myContext.Entry(myContext.Spaceships.FirstOrDefault(s => s.ShipID == shipToRemove.ShipID)).CurrentValues.SetValues(shipToRemove);
+                myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
                 myContext.SaveChanges();
+
                 Console.WriteLine($"The check out for {shipToRemove.ShipName} succeded, {totalsum} have been withdrawn from your card\n" +
                     $"your current amount of credits: {person.Credits}");
             }
             else
             {
                 Console.WriteLine($"Not enough credits on your card {person.Name}");
+            }
+        }
+
+        public static void History(DatabasePerson name)
+        {
+            Console.WriteLine("This is your History");
+
+            List<DatabasePerson> list = new List<DatabasePerson>();
+
+            List<DatabasePerson> newList = list.Where(p => p.PersonID == name.PersonID && p.Startships.Any(u => u.Payed == false)).ToList();
+
+            var checkPerson = context.Persons.Where(p => p.PersonID == name.PersonID).ToList();
+            var checkShip = context.Spaceships.Where(p => p.Payed == true && p.Person == checkPerson[0]).ToList();
+
+            for (int i = 0; i < checkShip.Count; i++)
+            {
+                Console.WriteLine($"[{i}] {checkShip[i].ShipName}");
             }
         }
     }

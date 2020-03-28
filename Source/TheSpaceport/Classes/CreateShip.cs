@@ -61,7 +61,7 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAddStarship AddToDataBase()
+        public IConfigDatabase UpdateDatabase()
         {
             using (var myContext = new MyContext())
             {

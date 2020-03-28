@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 
 namespace TheSpaceport
 {
@@ -15,7 +17,11 @@ namespace TheSpaceport
         protected override void OnConfiguring(DbContextOptionsBuilder dbContext)
         {
             dbContext.UseSqlServer(@"Data Source=den1.mssql8.gear.host;Initial Catalog=thespaceportdb;User id=thespaceportdb;password=Ld0RW!-xKvLa;");
-            //dbContext.UseSqlServer(Program.defaultConnectionString);
+
+            //var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json");
+            //var config = builder.Build();
+            //var defaultConnectionString = config.GetConnectionString("DefaultConnection");
+            //dbContext.UseSqlServer(defaultConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
