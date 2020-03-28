@@ -11,7 +11,7 @@ namespace TheSpaceport
             bool menu = true;
             while (menu)
             {
-                Console.WriteLine("Welcom to the Spaceport, you have to be in starwars movie to park here \n");
+                Console.WriteLine("Welcome to the Spaceport, you have to be in starwars movie to park here \n");
                 Console.WriteLine("plz enter you name to identify your self \n");
 
                 Console.WriteLine("[0] Dock your ship");
