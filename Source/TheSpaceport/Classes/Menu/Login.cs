@@ -9,6 +9,7 @@ namespace TheSpaceport
     public class Login
     {
         private static MyContext context = new MyContext();
+        public static DatabasePerson personCheck;
 
         public static void AccessControl()
         {
@@ -36,24 +37,13 @@ namespace TheSpaceport
 
         public static void ControlPersonInDatabase(string personName)
         {
-            var personCheck = context.Persons.Where(p => p.Name == personName).FirstOrDefault();
+            personCheck = context.Persons.Where(p => p.Name == personName).FirstOrDefault();
 
             if (personCheck != null)
             {
                 Console.WriteLine($"Welcome back {personName}");
+                Console.WriteLine($"You have {personCheck.Credits} in credit\n");
                 MainMenu.Menu(personCheck);
-
-                //Console.WriteLine("Do you want to add mony? \n");
-                //Console.WriteLine("[0] - Yes\n");
-                //Console.WriteLine("[1] - No\n");
-                //int yesNo = int.Parse(Console.ReadLine());
-
-                //if (yesNo == 0)
-                //{
-                //}
-                //else if (yesNo == 1)
-                //{
-                //}
             }
             else
             {

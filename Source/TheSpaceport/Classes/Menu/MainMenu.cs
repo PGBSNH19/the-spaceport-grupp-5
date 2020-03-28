@@ -11,9 +11,7 @@ namespace TheSpaceport
             bool menu = true;
             while (menu)
             {
-                Console.WriteLine("Welcome to the Spaceport, you have to be in starwars movie to park here \n");
-                Console.WriteLine("plz enter you name to identify your self \n");
-
+                Console.WriteLine("---- Main Menu -----");
                 Console.WriteLine("[0] Dock your ship");
                 Console.WriteLine("[1] Checkout ship");
                 Console.WriteLine("[2] Docking history");
@@ -44,7 +42,6 @@ namespace TheSpaceport
 
                     case "4":
                         Console.WriteLine("Exit program");
-                        Console.ReadKey();
                         menu = false;
                         break;
                 }

@@ -17,6 +17,18 @@ namespace TheSpaceport
         public static void Main(string[] args)
         {
             //ControlParkingspace();
+            Console.WriteLine(@"
+ __    __     _                            _____        _____ _            __                                       _
+/ / /\ \ \___| | ___ ___  _ __ ___   ___  /__   \___   /__   \ |__   ___  / _\_ __   __ _  ___ ___ _ __   ___  _ __| |_
+\ \/  \/ / _ \ |/ __/ _ \| '_ ` _ \ / _ \   / /\/ _ \    / /\/ '_ \ / _ \ \ \| '_ \ / _` |/ __/ _ \ '_ \ / _ \| '__| __|
+ \  /\  /  __/ | (_| (_) | | | | | |  __/  / / | (_) |  / /  | | | |  __/ _\ \ |_) | (_| | (_|  __/ |_) | (_) | |  | |_
+  \/  \/ \___|_|\___\___/|_| |_| |_|\___|  \/   \___/   \/   |_| |_|\___| \__/ .__/ \__,_|\___\___| .__/ \___/|_|   \__|
+                                                                             |_|                  |_|
+
+");
+
+            Console.WriteLine("You have to be in starwars movie to park here");
+            Console.WriteLine("plz enter you name to identify your self \n");
             AccessControl();
         }
 
@@ -57,29 +69,13 @@ namespace TheSpaceport
             }
         }
 
-        public static void AddMoreFunds(DatabasePerson person)
+        public static void BackToMenu()
         {
-            Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
-
-            bool loop = true;
-            while (loop)
+            Console.WriteLine($"[x] Back to main menu");
+            string inputKey = Console.ReadLine().ToLower();
+            if (inputKey == "x")
             {
-                try
-                {
-                    int inputCreadits = int.Parse(Console.ReadLine());
-                    if (inputCreadits >= 1000)
-                    {
-                        MyContext myContext = new MyContext();
-                        person.Credits = inputCreadits + person.Credits;
-                        myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
-                        myContext.SaveChanges();
-                        loop = false;
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Error, please add credits to your card (Minimum 1000 credits): ");
-                }
+                Menu(Login.personCheck);
             }
         }
     }
