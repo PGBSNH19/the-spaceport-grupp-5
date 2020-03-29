@@ -27,7 +27,7 @@ namespace TheSpaceport
 
         public static void ShowAvailableShip(DatabasePerson currentPerson)
         {
-            Program.SelectMenu();
+            //Program.SelectMenu();
             bool loop = true;
             int selector;
             Console.WriteLine($"{currentPerson.Name} \n" +
