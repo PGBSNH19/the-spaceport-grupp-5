@@ -7,7 +7,7 @@ using TheSpaceport;
 
 namespace TheSpaceport.Migrations
 {
-    [DbContext(typeof(MyContext))]
+    [DbContext(typeof(SpaceportContext))]
     partial class MyContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

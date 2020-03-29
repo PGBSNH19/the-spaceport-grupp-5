@@ -8,7 +8,7 @@ using TheSpaceport;
 
 namespace TheSpaceport.Migrations
 {
-    [DbContext(typeof(MyContext))]
+    [DbContext(typeof(SpaceportContext))]
     [Migration("20200325143532_test1")]
     partial class test1
     {

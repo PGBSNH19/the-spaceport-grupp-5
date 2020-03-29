@@ -9,7 +9,7 @@ using System.IO;
 
 namespace TheSpaceport
 {
-    public class MyContext : DbContext
+    public class SpaceportContext : DbContext
     {
         public DbSet<DatabasePerson> Persons { get; set; }
         public DbSet<DatabaseStarship> Spaceships { get; set; }
@@ -28,7 +28,7 @@ namespace TheSpaceport
         {
             modelBuilder.Entity<DatabasePerson>().HasKey(p => p.PersonID);
 
-            modelBuilder.Entity<DatabasePerson>().HasMany(e => e.Startships).WithOne(c => c.Person).IsRequired();
+            modelBuilder.Entity<DatabasePerson>().HasMany(e => e.Startships).WithOne(p => p.Person).IsRequired();
 
             modelBuilder.Entity<DatabaseStarship>().HasKey(s => s.ShipID);
         }

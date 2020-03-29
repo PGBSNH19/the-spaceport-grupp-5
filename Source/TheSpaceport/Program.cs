@@ -26,8 +26,7 @@ namespace TheSpaceport
 
 ");
 
-            Console.WriteLine("You have to be in starwars movie to park here");
-            Console.WriteLine("plz enter you name to identify your self \n");
+            Console.WriteLine("Are you part of the Star Wars universe or just ordinary filthy peasant?");
             Login.AccessControl();
         }
 

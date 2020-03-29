@@ -8,7 +8,7 @@ namespace TheSpaceport.Classes.Menu
     {
         public static void Profile(DatabasePerson Person)
         {
-            Program.SelectMenu();
+            
             Console.Clear();
             Console.WriteLine("--------------------Your profile------------------------");
             Console.WriteLine($"Name: {Person.Name}");
@@ -20,13 +20,13 @@ namespace TheSpaceport.Classes.Menu
             {
                 if (Person.Startships[i].Payed == true)
                 {
-                    Console.WriteLine($"Ticket [{Person.Startships[i].ShipID}]: {Person.Startships[i].ShipName}, was docked here for {Person.Startships[i].NumberOfDays} " +
-                        $"days and for a total cost of {Person.Startships[i].PricePerDay * Person.Startships[i].NumberOfDays} and has been checked-out. ");
+                    Console.WriteLine($"Ticket [{Person.Startships[i].ShipID}]: Spaceship: {Person.Startships[i].ShipName}, Amount of days: {Person.Startships[i].NumberOfDays}, " +
+                        $"Total price: {Person.Startships[i].PricePerDay * Person.Startships[i].NumberOfDays}, Payed: Yes ");
                 }
                 else
                 {
-                    Console.WriteLine($"Ticket [{Person.Startships[i].ShipID}]: {Person.Startships[i].ShipName}, is going to be here for {Person.Startships[i].NumberOfDays} " +
-                        $"days and for a total cost of {Person.Startships[i].PricePerDay * Person.Startships[i].NumberOfDays} and has not been checked-out. ");
+                    Console.WriteLine($"Ticket [{Person.Startships[i].ShipID}]: Spaceship: {Person.Startships[i].ShipName}, Amount of days: {Person.Startships[i].NumberOfDays}, " +
+                        $"Total price: {Person.Startships[i].PricePerDay * Person.Startships[i].NumberOfDays}, Payed: No ");
                 }
             }
             Console.WriteLine("Enter Key to go back");

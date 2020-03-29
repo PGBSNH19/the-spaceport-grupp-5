@@ -10,16 +10,17 @@ namespace TheSpaceport
         public static void ControlParkingspace(DatabasePerson person)
         {
             //Program.SelectMenu();
-            MyContext myContext = new MyContext();
+            SpaceportContext myContext = new SpaceportContext();
             var availableSlots = myContext.Spaceships.Where(p => p.Payed == false).ToList();
             if (availableSlots.Count < 20)
             {
-                Console.WriteLine($"There is { (20 - availableSlots.Count)} avaible docking");
+                Console.WriteLine($"{(20 - availableSlots.Count)} docking spots available");
                 var addNewShip = new CreateShip(person).StarshipControl().Charge().UpdateDatabase();
             }
             else
             {
-                Console.WriteLine("No parkingslots are available for the moment, please come back later!");
+                Console.WriteLine("No docking spots are available for the moment, please come back later!");
+                Console.ReadKey();
             }
         }
     }

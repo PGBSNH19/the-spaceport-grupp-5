@@ -13,6 +13,7 @@ namespace TheSpaceport
                 Console.Clear();
 
                 Welcome();
+                Console.WriteLine($"Welcome {person.Name}\nCredits: {person.Credits}");
 
                 Console.WriteLine("---- Main Menu -----");
                 Console.WriteLine("[0] Dock your ship");

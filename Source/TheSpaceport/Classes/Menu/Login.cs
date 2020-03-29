@@ -9,7 +9,7 @@ namespace TheSpaceport
 {
     public class Login
     {
-        private static MyContext context = new MyContext();
+        private static SpaceportContext context = new SpaceportContext();
         public static DatabasePerson personLogIn;
 
         public static void AccessControl()
@@ -18,7 +18,7 @@ namespace TheSpaceport
             bool loop = true;
             while (loop)
             {
-                Console.Write("Please enter your name: ");
+                Console.Write("Please identify yourself, enter your name: ");
 
                 var personRequest = new RestRequest($"people/?search={Console.ReadLine()}", DataFormat.Json);
                 var personResponse = client.Execute(personRequest);
@@ -42,8 +42,6 @@ namespace TheSpaceport
 
             if (personLogIn != null)
             {
-                Console.WriteLine($"Welcome back {personName}");
-                Console.WriteLine($"You have {personLogIn.Credits} in credit\n");
                 MainMenu.Menu(personLogIn);
             }
             else
