@@ -13,9 +13,7 @@ namespace TheSpaceport
         public static DatabasePerson personLogIn;
 
         public static void AccessControl()
-        {
-            Console.Write("Please identify yourself, enter your name: ");
-            ControlPersonInDatabase(Console.ReadLine());
+        {   
             RestClient client = new RestClient("https://swapi.co/api/");
             bool loop = true;
             while (loop)
