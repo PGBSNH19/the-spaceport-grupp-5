@@ -3,7 +3,7 @@ using TheSpaceport.Classes.Menu;
 
 namespace TheSpaceport
 {
-    public class MainMenu : Login
+    public class MainMenu
     {
         public static void Menu(DatabasePerson person)
         {

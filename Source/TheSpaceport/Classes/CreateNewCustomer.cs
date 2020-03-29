@@ -11,8 +11,6 @@ namespace TheSpaceport
         private MyContext myContext = new MyContext();
         public DatabasePerson createPerson = new DatabasePerson();
 
-        public string Name;
-
         public IAddPerson AddNameToPerson(string name)
         {
             Console.WriteLine($"Welcome {name}");
