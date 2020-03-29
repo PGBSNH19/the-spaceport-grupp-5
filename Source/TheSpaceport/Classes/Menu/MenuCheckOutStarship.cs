@@ -12,7 +12,7 @@ namespace TheSpaceport
 
         public static void CheckingForShips(DatabasePerson currentPerson)
         {
-            var unPayedShips = context.Persons.Where(p => p.PersonID == currentPerson.PersonID).Select(m => new DatabasePerson {  Startships = m.Startships.Where(s => s.Payed == false).ToList() }).FirstOrDefault();
+            var unPayedShips = context.Persons.Where(p => p.PersonID == currentPerson.PersonID).Select(m => new DatabasePerson { Startships = m.Startships.Where(s => s.Payed == false).ToList() }).FirstOrDefault();
 
             if (unPayedShips.Startships.Count > 0)
             {
@@ -22,12 +22,12 @@ namespace TheSpaceport
             {
                 Console.WriteLine($"No ships available for {currentPerson.Name}, press any key to go back to main menu");
                 Console.ReadKey();
-
             }
         }
 
         public static void ShowAvailableShip(DatabasePerson currentPerson)
         {
+            Program.SelectMenu();
             bool loop = true;
             int selector;
             Console.WriteLine($"{currentPerson.Name} \n" +
@@ -66,7 +66,7 @@ namespace TheSpaceport
             {
                 shipToRemove.Payed = true;
                 person.Credits = person.Credits - totalsum;
-                using(var myContext = new MyContext())
+                using (var myContext = new MyContext())
                 {
                     myContext.Entry(myContext.Spaceships.FirstOrDefault(s => s.ShipID == shipToRemove.ShipID)).CurrentValues.SetValues(shipToRemove);
                     myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
@@ -81,6 +81,6 @@ namespace TheSpaceport
                 Console.WriteLine($"Not enough credits on your card {person.Name}, please add more funds");
                 Console.ReadKey();
             }
-        }  
+        }
     }
 }

@@ -9,15 +9,16 @@ namespace TheSpaceport
     {
         public static void AddMoreFunds(DatabasePerson person)
         {
+            Program.SelectMenu();
             Console.WriteLine($"You have {person.Credits} in credits");
             Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
+            int inputCreadits = int.Parse(Console.ReadLine());
 
             bool loop = true;
             while (loop)
             {
                 try
                 {
-                    int inputCreadits = int.Parse(Console.ReadLine());
                     if (inputCreadits >= 1000)
                     {
                         MyContext myContext = new MyContext();

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
-namespace TheSpaceport.Classes.Menu
+namespace TheSpaceport
 {
     public class MenuDockShip
     {
         public static void ControlParkingspace(DatabasePerson person)
         {
+            Program.SelectMenu();
             MyContext myContext = new MyContext();
             var availableSlots = myContext.Spaceships.Where(p => p.Payed == false).ToList();
             if (availableSlots.Count < 20)

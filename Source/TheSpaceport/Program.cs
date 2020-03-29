@@ -31,9 +31,15 @@ namespace TheSpaceport
             Login.AccessControl();
         }
 
-        
-
-       
+        public static void SelectMenu()
+        {
+            Console.WriteLine("Press x to go back or press enter to continue");
+            string press = Console.ReadLine().ToLower();
+            if (press == "x")
+            {
+                Menu(Login.personLogIn);
+            }
+        }
 
         public static void BackToMenu()
         {

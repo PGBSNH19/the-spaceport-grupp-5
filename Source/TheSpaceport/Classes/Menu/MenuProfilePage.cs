@@ -8,6 +8,7 @@ namespace TheSpaceport.Classes.Menu
     {
         public static void Profile(DatabasePerson Person)
         {
+            Program.SelectMenu();
             Console.Clear();
             Console.WriteLine("--------------------Your profile------------------------");
             Console.WriteLine($"Name: {Person.Name}");

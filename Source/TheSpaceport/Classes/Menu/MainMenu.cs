@@ -5,12 +5,15 @@ namespace TheSpaceport
 {
     public class MainMenu : Login
     {
-
         public static void Menu(DatabasePerson person)
         {
             bool menu = true;
             while (menu)
             {
+                Console.Clear();
+
+                Welcome();
+
                 Console.WriteLine("---- Main Menu -----");
                 Console.WriteLine("[0] Dock your ship");
                 Console.WriteLine("[1] Checkout ship");
@@ -21,11 +24,11 @@ namespace TheSpaceport
                 string option = Console.ReadLine();
 
                 Console.Clear();
-
+                Welcome();
                 switch (option)
                 {
                     case "0":
-                        
+
                         MenuDockShip.ControlParkingspace(person);
                         break;
 
@@ -47,6 +50,21 @@ namespace TheSpaceport
                         break;
                 }
             }
+        }
+
+        public static void Welcome()
+        {
+            Console.WriteLine(@"
+ _______ _             _____                                       _
+|__   __| |           / ____|                                     | |
+   | |  | |__   ___  | (___  _ __   __ _  ___ ___ _ __   ___  _ __| |_
+   | |  | '_ \ / _ \  \___ \| '_ \ / _` |/ __/ _ \ '_ \ / _ \| '__| __|
+   | |  | | | |  __/  ____) | |_) | (_| | (_|  __/ |_) | (_) | |  | |_
+   |_|  |_| |_|\___| |_____/| .__/ \__,_|\___\___| .__/ \___/|_|   \__|
+                            | |                  | |
+                            |_|                  |_|
+
+");
         }
     }
 }
