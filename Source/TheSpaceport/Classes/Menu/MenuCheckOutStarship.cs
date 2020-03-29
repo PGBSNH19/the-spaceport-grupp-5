@@ -8,16 +8,16 @@ namespace TheSpaceport
 {
     public class MenuCheckOutStarship
     {
-        private static SpaceportContext context = new SpaceportContext();
+        private static MyContext context = new MyContext();
 
         public static void CheckingForShips(DatabasePerson currentPerson)
         {
-            var unpayedShips = context.Spaceships.Where(p => p.Person == currentPerson && p.Payed == false).ToList();
-            
+            var unpayedShips = context.Spaceships.Where(s => s.Person == currentPerson && s.Payed == false).ToList();
+
 
             if (unpayedShips.Count > 0)
             {
-                ShowAvailableShip(currentPerson);
+                ShowAvailableShip(currentPerson, unpayedShips);
             }
             else
             {
@@ -26,7 +26,7 @@ namespace TheSpaceport
             }
         }
 
-        public static void ShowAvailableShip(DatabasePerson currentPerson)
+        public static void ShowAvailableShip(DatabasePerson currentPerson, List<DatabaseStarship> unpayedShips)
         {
             //Program.SelectMenu();
             bool loop = true;
@@ -34,13 +34,9 @@ namespace TheSpaceport
             Console.WriteLine($"{currentPerson.Name} \n" +
                 $"Current credits {currentPerson.Credits}\n" +
                 $"Avaible ships to checkout: ");
-            for (int i = 0; i <= (currentPerson.Startships.Count - 1); i++)
-            { 
-                if(currentPerson.Startships[i].Payed== false)
-                {
-                    Console.WriteLine($"[{i}] {currentPerson.Startships[i].ShipName} Price: {currentPerson.Startships[i].NumberOfDays * currentPerson.Startships[i].PricePerDay}");
-                }
-                    
+            for (int i = 0; i <= (unpayedShips.Count - 1); i++)
+            {               
+                    Console.WriteLine($"[{i}] {unpayedShips[i].ShipName} Price: {unpayedShips[i].NumberOfDays * unpayedShips[i].PricePerDay}");
             }
 
             while (loop)
@@ -48,10 +44,11 @@ namespace TheSpaceport
                 Console.WriteLine("Please select a ship to checkout:  ");
                 try
                 {
-                    selector = int.Parse(Console.ReadLine());
-                    Console.WriteLine($"you have selected: {currentPerson.Startships[selector].ShipName}");
-                    CheckOutShip(currentPerson.Startships[selector], currentPerson);
-                    loop = false;
+                        selector = int.Parse(Console.ReadLine());
+                        Console.WriteLine($"you have selected: {unpayedShips[selector].ShipName}");
+                        CheckOutShip(currentPerson, (currentPerson.Startships.Where(s=> s.ShipID ==
+                        unpayedShips[selector].ShipID).FirstOrDefault()));
+                        loop = false;
                 }
                 catch
                 {
@@ -60,14 +57,14 @@ namespace TheSpaceport
             }
         }
 
-        public static void CheckOutShip(DatabaseStarship shipToCheckout, DatabasePerson person)
+        public static void CheckOutShip(DatabasePerson person, DatabaseStarship shipToCheckout)
         {
             int totalsum = shipToCheckout.NumberOfDays * shipToCheckout.PricePerDay;
             if (totalsum <= person.Credits)
             {
                 shipToCheckout.Payed = true;
                 person.Credits = person.Credits - totalsum;
-                using (var myContext = new SpaceportContext())
+                using (var myContext = new MyContext())
                 {
                     myContext.Entry(myContext.Spaceships.FirstOrDefault(s => s.ShipID == shipToCheckout.ShipID)).CurrentValues.SetValues(shipToCheckout);
                     myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);

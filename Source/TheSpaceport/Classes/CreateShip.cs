@@ -63,7 +63,7 @@ namespace TheSpaceport
 
         public IConfigDatabase UpdateDatabase()
         {
-            using (var myContext = new SpaceportContext())
+            using (var myContext = new MyContext())
             {
                 myContext.Attach(createPerson);
                 createPerson.Startships.Add(createStarship);

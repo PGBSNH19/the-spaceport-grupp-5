@@ -21,7 +21,7 @@ namespace TheSpaceport
                     int inputCreadits = int.Parse(Console.ReadLine());
                     if (inputCreadits >= 1000)
                     {
-                        SpaceportContext myContext = new SpaceportContext();
+                        MyContext myContext = new MyContext();
                         person.Credits = inputCreadits + person.Credits;
                         myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
                         myContext.SaveChanges();

@@ -10,7 +10,7 @@ namespace TheSpaceport
         public static void ControlParkingspace(DatabasePerson person)
         {
             //Program.SelectMenu();
-            SpaceportContext myContext = new SpaceportContext();
+            MyContext myContext = new MyContext();
             var availableSlots = myContext.Spaceships.Where(p => p.Payed == false).ToList();
             if (availableSlots.Count < 20)
             {

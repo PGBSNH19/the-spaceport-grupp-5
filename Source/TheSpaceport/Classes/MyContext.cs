@@ -9,7 +9,7 @@ using System.IO;
 
 namespace TheSpaceport
 {
-    public class SpaceportContext : DbContext
+    public class MyContext : DbContext
     {
         public DbSet<DatabasePerson> Persons { get; set; }
         public DbSet<DatabaseStarship> Spaceships { get; set; }

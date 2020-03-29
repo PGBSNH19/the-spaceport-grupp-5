@@ -9,11 +9,13 @@ namespace TheSpaceport
 {
     public class Login
     {
-        private static SpaceportContext context = new SpaceportContext();
+        private static MyContext context = new MyContext();
         public static DatabasePerson personLogIn;
 
         public static void AccessControl()
         {
+            Console.Write("Please identify yourself, enter your name: ");
+            ControlPersonInDatabase(Console.ReadLine());
             RestClient client = new RestClient("https://swapi.co/api/");
             bool loop = true;
             while (loop)

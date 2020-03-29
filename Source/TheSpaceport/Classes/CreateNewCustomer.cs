@@ -8,7 +8,7 @@ namespace TheSpaceport
 {
     public class CreateNewCustomer : IAddPerson, IConfigDatabase
     {
-        private SpaceportContext myContext = new SpaceportContext();
+        private MyContext myContext = new MyContext();
         public DatabasePerson createPerson = new DatabasePerson();
 
         public string Name;
