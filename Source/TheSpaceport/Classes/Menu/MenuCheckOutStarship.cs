@@ -12,9 +12,10 @@ namespace TheSpaceport
 
         public static void CheckingForShips(DatabasePerson currentPerson)
         {
-            var unpayedStarships = context.Spaceships.Where(p => p.Person == currentPerson && p.Payed == false).ToList();
+            var unpayedShips = context.Spaceships.Where(p => p.Person == currentPerson && p.Payed == false).ToList();
             
-            if (unpayedStarships.Count > 0)
+
+            if (unpayedShips.Count > 0)
             {
                 ShowAvailableShip(currentPerson);
             }
