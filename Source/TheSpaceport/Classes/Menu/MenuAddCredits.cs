@@ -9,7 +9,7 @@ namespace TheSpaceport
     {
         public static void AddMoreFunds(DatabasePerson person)
         {
-            Console.WriteLine($"You have {Login.personCheck.Credits} in credits");
+            Console.WriteLine($"You have {person.Credits} in credits");
             Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
 
             bool loop = true;

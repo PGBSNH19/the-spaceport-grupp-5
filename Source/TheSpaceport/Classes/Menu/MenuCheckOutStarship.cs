@@ -10,45 +10,36 @@ namespace TheSpaceport
     {
         private static MyContext context = new MyContext();
 
-        public static void CheckingForShips(DatabasePerson name)
+        public static void CheckingForShips(DatabasePerson currentPerson)
         {
-            //var personCheck = context.Persons.Include(p => p.Startships).Where(p => p.PersonID == name.PersonID).FirstOrDefault();
-            //var a = context.Spaceships.Where(p => p.Payed == false);
+            var unPayedShips = context.Persons.Where(p => p.PersonID == currentPerson.PersonID).Select(m => new DatabasePerson {  Startships = m.Startships.Where(s => s.Payed == false).ToList() }).FirstOrDefault();
 
-            //var personCheck = context.Persons.Where(p => p.PersonID == name.PersonID).ToList();
-            //var shipCheck = context.Spaceships.Where(p => p.Payed == false && p.Person == personCheck[0]).ToList();
-
-            //List<DatabasePerson> list = new List<DatabasePerson>();
-            //List<DatabasePerson> newList = list.Where(p => p.PersonID == name.PersonID && p.Startships.Any(u => u.Payed == false)).ToList();
-
-            var test = context.Persons.Where(p => p.PersonID == name.PersonID).Select(m => new DatabasePerson { PersonID = m.PersonID, Name = m.Name, Credits = m.Credits, Startships = m.Startships.Where(s => s.Payed == false).ToList() }).FirstOrDefault();
-
-            if (test.Startships.Count > 0)
+            if (unPayedShips.Startships.Count > 0)
             {
-                ShowAvailableShip(test, context);
+                ShowAvailableShip(currentPerson);
             }
             else
             {
-                Console.WriteLine($"No ships available for {name.Name}");
+                Console.WriteLine($"No ships available for {currentPerson.Name}, press any key to go back to main menu");
+                Console.ReadKey();
+
             }
         }
 
-        public static void ShowAvailableShip(DatabasePerson person, MyContext context)
+        public static void ShowAvailableShip(DatabasePerson currentPerson)
         {
             bool loop = true;
             int selector;
-            Console.WriteLine($"{person.Name} \n" +
-                $"Current credits {person.Credits}\n" +
+            Console.WriteLine($"{currentPerson.Name} \n" +
+                $"Current credits {currentPerson.Credits}\n" +
                 $"Avaible ships to checkout: ");
-            for (int i = 0; i <= (person.Startships.Count - 1); i++)
+            for (int i = 0; i <= (currentPerson.Startships.Count - 1); i++)
             {
-                if (person.Startships[i].Payed == false)
+                if (currentPerson.Startships[i].Payed == false)
                 {
-                    Console.WriteLine($"[{i}] {person.Startships[i].ShipName}");
+                    Console.WriteLine($"[{i}] {currentPerson.Startships[i].ShipName}");
                 }
             }
-
-            Program.BackToMenu();
 
             while (loop)
             {
@@ -57,8 +48,8 @@ namespace TheSpaceport
                 if (char.IsDigit(userInput.KeyChar))
                 {
                     selector = int.Parse(userInput.KeyChar.ToString());
-                    Console.WriteLine($"you have selected: {person.Startships[selector].ShipName}");
-                    CheckOutShip(person.Startships[selector], person, context);
+                    Console.WriteLine($"you have selected: {currentPerson.Startships[selector].ShipName}");
+                    CheckOutShip(currentPerson.Startships[selector], currentPerson);
                     loop = false;
                 }
                 else
@@ -68,47 +59,28 @@ namespace TheSpaceport
             }
         }
 
-        public static void CheckOutShip(DatabaseStarship shipToRemove, DatabasePerson person, MyContext myContext)
+        public static void CheckOutShip(DatabaseStarship shipToRemove, DatabasePerson person)
         {
             int totalsum = shipToRemove.NumberOfDays * shipToRemove.PricePerDay;
             if (totalsum <= person.Credits)
             {
                 shipToRemove.Payed = true;
                 person.Credits = person.Credits - totalsum;
-                myContext.Entry(myContext.Spaceships.FirstOrDefault(s => s.ShipID == shipToRemove.ShipID)).CurrentValues.SetValues(shipToRemove);
-                myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
-                myContext.SaveChanges();
-
+                using(var myContext = new MyContext())
+                {
+                    myContext.Entry(myContext.Spaceships.FirstOrDefault(s => s.ShipID == shipToRemove.ShipID)).CurrentValues.SetValues(shipToRemove);
+                    myContext.Entry(myContext.Persons.FirstOrDefault(p => p.PersonID == person.PersonID)).CurrentValues.SetValues(person);
+                    myContext.SaveChanges();
+                }
                 Console.WriteLine($"The check out for {shipToRemove.ShipName} succeded, {totalsum} have been withdrawn from your card\n" +
                     $"your current amount of credits: {person.Credits}");
+                Console.ReadKey();
             }
             else
             {
-                Console.WriteLine($"Not enough credits on your card {person.Name}");
+                Console.WriteLine($"Not enough credits on your card {person.Name}, please add more funds");
+                Console.ReadKey();
             }
-        }
-
-        public static void History(DatabasePerson Person)
-        {
-            Console.WriteLine("This is your History:");
-
-            var checkPerson = context.Persons.Where(p => p.PersonID == Person.PersonID).ToList();
-            var checkShip = context.Spaceships.Where(p => p.Person == checkPerson[0]).ToList();
-
-            for (int i = 0; i < checkShip.Count; i++)
-            {
-                if (checkShip[i].Payed == true)
-                {
-                    Console.WriteLine($"[{i}] {checkShip[i].ShipName}, was parked here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays} and has been checked-out. ");
-                }
-                else
-                {
-                    Console.WriteLine($"[{i}] {checkShip[i].ShipName}, is going to be here for {checkShip[i].NumberOfDays} days and for a total cost of {checkShip[i].PricePerDay * checkShip[i].NumberOfDays} and has not been checked-out. ");
-                }
-            }
-            Console.WriteLine("Enter Key to go back");
-            Console.ReadKey();
-            Console.Clear();
-        }
+        }  
     }
 }

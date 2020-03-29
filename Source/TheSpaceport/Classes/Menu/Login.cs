@@ -3,13 +3,14 @@ using System.Linq;
 using RestSharp;
 using System;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheSpaceport
 {
     public class Login
     {
         private static MyContext context = new MyContext();
-        public static DatabasePerson personCheck;
+        public static DatabasePerson personLogIn;
 
         public static void AccessControl()
         {
@@ -37,19 +38,19 @@ namespace TheSpaceport
 
         public static void ControlPersonInDatabase(string personName)
         {
-            personCheck = context.Persons.Where(p => p.Name == personName).FirstOrDefault();
+            personLogIn = context.Persons.Include(p=> p.Startships).Where(p => p.Name == personName).FirstOrDefault();
 
-            if (personCheck != null)
+            if (personLogIn != null)
             {
                 Console.WriteLine($"Welcome back {personName}");
-                Console.WriteLine($"You have {personCheck.Credits} in credit\n");
-                MainMenu.Menu(personCheck);
+                Console.WriteLine($"You have {personLogIn.Credits} in credit\n");
+                MainMenu.Menu(personLogIn);
             }
             else
             {
                 var newCustomer = new CreateNewCustomer().AddNameToPerson(personName).AddFunds().UpdateDatabase();
-                var getCreatedPerson = context.Persons.Where(p => p.Name == personName).FirstOrDefault();
-                MainMenu.Menu(getCreatedPerson);
+                personLogIn = context.Persons.Include(p=> p.Startships).Where(p => p.Name == personName).FirstOrDefault();
+                MainMenu.Menu(personLogIn);
             }
         }
     }

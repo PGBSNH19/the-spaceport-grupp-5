@@ -1,10 +1,10 @@
 ﻿using System;
+using TheSpaceport.Classes.Menu;
 
 namespace TheSpaceport
 {
     public class MainMenu : Login
     {
-        public static CreateNewCustomer a = new CreateNewCustomer();
 
         public static void Menu(DatabasePerson person)
         {
@@ -14,7 +14,7 @@ namespace TheSpaceport
                 Console.WriteLine("---- Main Menu -----");
                 Console.WriteLine("[0] Dock your ship");
                 Console.WriteLine("[1] Checkout ship");
-                Console.WriteLine("[2] Docking history");
+                Console.WriteLine("[2] Profile page");
                 Console.WriteLine("[3] Add more Funds");
                 Console.WriteLine("[4] Exit");
 
@@ -25,7 +25,8 @@ namespace TheSpaceport
                 switch (option)
                 {
                     case "0":
-                        Program.ControlParkingspace(person);
+                        
+                        MenuDockShip.ControlParkingspace(person);
                         break;
 
                     case "1":
@@ -33,7 +34,7 @@ namespace TheSpaceport
                         break;
 
                     case "2":
-                        MenuCheckOutStarship.History(person);
+                        MenuProfilePage.Profile(person);
                         break;
 
                     case "3":
