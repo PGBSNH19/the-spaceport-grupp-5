@@ -1,11 +1,9 @@
 ﻿namespace TheSpaceport
 {
-    public interface IAddStarship
+    public interface IAddStarship : IConfigDatabase
     {
         IAddStarship StarshipControl();
+
         IAddStarship Charge();
-        IAddStarship AddToDataBase();
     }
-
-
 }

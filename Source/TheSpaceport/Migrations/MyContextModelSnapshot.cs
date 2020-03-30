@@ -67,7 +67,7 @@ namespace TheSpaceport.Migrations
 
             modelBuilder.Entity("TheSpaceport.DatabaseStarship", b =>
                 {
-                    b.HasOne("TheSpaceport.DatabasePerson", null)
+                    b.HasOne("TheSpaceport.DatabasePerson", "Person")
                         .WithMany("Startships")
                         .HasForeignKey("PersonID")
                         .OnDelete(DeleteBehavior.Cascade)

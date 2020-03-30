@@ -2,15 +2,14 @@
 using RestSharp;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace TheSpaceport
 {
-    public class CreateNewCustomer : IAddPerson, IAddStarship
+    public class CreateNewCustomer : IAddPerson, IConfigDatabase
     {
+        private MyContext myContext = new MyContext();
         public DatabasePerson createPerson = new DatabasePerson();
-        public DatabaseStarship createStarship = new DatabaseStarship();
-
-        private RestClient client = new RestClient("https://swapi.co/api/");
 
         public IAddPerson AddNameToPerson(string name)
         {
@@ -21,15 +20,18 @@ namespace TheSpaceport
 
         public IAddPerson AddFunds()
         {
-            Console.Write("Please add credits to your card (Minimum 1000 credits): ");
-            bool loop = false;
-            while (loop == false)
+            Console.WriteLine("Please add credits to your card (Minimum 1000 credits): ");
+            bool loop = true;
+            while (loop)
             {
                 try
                 {
-                    createPerson.Credits = int.Parse(Console.ReadLine());
-                    if (createPerson.Credits >= 1000)
-                        loop = true;
+                    int inputCreadit = int.Parse(Console.ReadLine());
+                    if (inputCreadit >= 1000)
+                    {
+                        createPerson.Credits = inputCreadit;
+                        loop = false;
+                    }
                 }
                 catch
                 {
@@ -39,66 +41,11 @@ namespace TheSpaceport
             return this;
         }
 
-        public IAddStarship StarshipControl()
+        public IConfigDatabase UpdateDatabase()
         {
-            bool loop = false;
-            while(loop == false)
-            {
-                Console.Write("Please validate your starship: ");
-                var starshipRequest = new RestRequest($"starships/?search={Console.ReadLine()}", DataFormat.Json);
-                var starshipResponse = client.Execute(starshipRequest);
-                var starship = JsonConvert.DeserializeObject<JSONStarshipRoot>(starshipResponse.Content);
-
-                if (starship.results.Count > 0)
-                {
-                    Console.WriteLine($"{starship.results[0].name} ready for parking");
-                    this.createStarship.ShipName = starship.results[0].name;
-                    this.createStarship.PricePerDay = 1000;
-                    loop = true;
-                }
-                else
-                {
-                    Console.WriteLine("Unauthorised spaceship");
-                }
-            }
-
-           
-
-            return this;
-        }
-
-        public IAddStarship Charge()
-        {
-            bool loop = false;
-            Console.WriteLine($"The parkingcost for {this.createStarship.ShipName} will be {this.createStarship.PricePerDay} per day " +
-                $".\nEnter how many days you want to park (Minimum 1 day): ");
-            while (loop == false)
-            {
-                try
-                {
-                    createStarship.NumberOfDays = int.Parse(Console.ReadLine());
-                    loop = true;
-                }
-                catch
-                {
-                    Console.WriteLine("Error, please try again");
-                }
-            }
-            return this;
-        }
-
-        public IAddStarship AddToDataBase()
-        {
-
-            MyContext myContext = new MyContext();
             myContext.Add<DatabasePerson>(this.createPerson);
-            this.createStarship.PersonID = int.Parse(myContext.Entry(this.createPerson).Property("PersonID").CurrentValue.ToString());
-            myContext.Add<DatabaseStarship>(this.createStarship);
             myContext.SaveChanges();
             return this;
         }
-
     }
-
-    
 }
